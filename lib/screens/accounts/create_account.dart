@@ -103,20 +103,48 @@ class _CreateAccountState extends State<CreateAccount> {
                           ],
                         ),
                         child: Image.asset(
-                          'assets/icons/wallet.png',
+                          'assets/icons/account_name.png',
                           width: 40,
                         )),
-                    SizedBox(width: 8),
+                    const SizedBox(width: 8),
                     const Expanded(
                       child: TextField(
                         textCapitalization: TextCapitalization.words,
                         style: TextStyle(fontSize: 18),
                         decoration: InputDecoration(
-                          border: UnderlineInputBorder(),
-                          contentPadding: EdgeInsets.symmetric(vertical: 0),
-                        ),
+                            border: UnderlineInputBorder(),
+                            contentPadding: EdgeInsets.symmetric(vertical: 0),
+                            hintText: 'Tên tài khoản',
+                            hintStyle: TextStyle(color: Colors.black38)),
                       ),
                     ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  children: [
+                    Container(
+                        decoration: BoxDecoration(
+                          color: Colors.black54,
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 2,
+                              blurRadius: 4,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: Image.asset(
+                          'assets/icons/wallet.png',
+                          width: 40,
+                        )),
+                    const SizedBox(width: 8),
+                    const Text(
+                      'Tiền mặt',
+                      style: TextStyle(fontSize: 18),
+                    )
                   ],
                 ),
               ],
