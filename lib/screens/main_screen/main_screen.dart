@@ -90,24 +90,21 @@ class _MainScreenState extends State<MainScreen> {
           margin: const EdgeInsets.only(top: 30),
           height: 64,
           width: 64,
-          child: Visibility(
-            visible: MediaQuery.of(context).viewInsets.bottom == 0.0,
-            child: FloatingActionButton(
-              backgroundColor: Colors.white,
-              elevation: 0,
-              onPressed: () => Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const CreateExpend(),
-                ),
+          child: FloatingActionButton(
+            backgroundColor: Colors.white,
+            elevation: 0,
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => const CreateExpend(),
               ),
-              shape: RoundedRectangleBorder(
-                side: const BorderSide(width: 3, color: Colors.green),
-                borderRadius: BorderRadius.circular(100),
-              ),
-              child: const Icon(
-                Icons.add,
-                color: Colors.green,
-              ),
+            ),
+            shape: RoundedRectangleBorder(
+              side: const BorderSide(width: 3, color: Colors.green),
+              borderRadius: BorderRadius.circular(100),
+            ),
+            child: const Icon(
+              Icons.add,
+              color: Colors.green,
             ),
           ),
         ),

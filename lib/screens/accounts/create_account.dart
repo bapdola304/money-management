@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:money_management/components/button.dart';
+import 'package:money_management/components/text_field_custom.dart';
+import 'package:money_management/screens/accounts/components/TypeSelect.dart';
 import 'package:money_management/utils/currence_format.dart';
+import 'package:toastification/toastification.dart';
 
 class CreateAccount extends StatefulWidget {
   const CreateAccount({Key? key}) : super(key: key);
@@ -11,6 +15,8 @@ class CreateAccount extends StatefulWidget {
 
 class _CreateAccountState extends State<CreateAccount> {
   TextEditingController _controller = TextEditingController(text: '0');
+  TextEditingController _accountsController = TextEditingController();
+  var focusNode = FocusNode();
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +40,7 @@ class _CreateAccountState extends State<CreateAccount> {
         centerTitle: true,
       ),
       body: Container(
-        color: const Color(0xFFF5F5F8),
+        color: const Color(0xFFefeff2),
         child: Column(children: [
           Container(
             color: Colors.white,
@@ -86,72 +92,75 @@ class _CreateAccountState extends State<CreateAccount> {
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             child: Column(
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Container(
-                        decoration: BoxDecoration(
-                          color: Colors.black54,
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.5),
-                              spreadRadius: 2,
-                              blurRadius: 4,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: Image.asset(
-                          'assets/icons/account_name.png',
-                          width: 40,
-                        )),
-                    const SizedBox(width: 8),
-                    const Expanded(
-                      child: TextField(
-                        textCapitalization: TextCapitalization.words,
-                        style: TextStyle(fontSize: 18),
-                        decoration: InputDecoration(
-                            border: UnderlineInputBorder(),
-                            contentPadding: EdgeInsets.symmetric(vertical: 0),
-                            hintText: 'Tên tài khoản',
-                            hintStyle: TextStyle(color: Colors.black38)),
-                      ),
-                    ),
-                  ],
+                TextFieldCustom(
+                  controller: _accountsController,
+                  focusNode: focusNode,
+                  hintText: 'Tên tài khoản',
+                  icon: Image.asset(
+                    'assets/icons/account_name.png',
+                    width: 40,
+                  ),
                 ),
-                const SizedBox(height: 10),
-                Row(
-                  children: [
-                    Container(
-                        decoration: BoxDecoration(
-                          color: Colors.black54,
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.5),
-                              spreadRadius: 2,
-                              blurRadius: 4,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: Image.asset(
-                          'assets/icons/wallet.png',
-                          width: 40,
-                        )),
-                    const SizedBox(width: 8),
-                    const Text(
-                      'Tiền mặt',
-                      style: TextStyle(fontSize: 18),
-                    )
-                  ],
+                const SizedBox(height: 20),
+                TypeSelect(
+                    text: 'Tiền mặt',
+                    icon: Image.asset(
+                      'assets/icons/wallet.png',
+                      width: 40,
+                    )),
+                const SizedBox(height: 20),
+                TypeSelect(
+                    text: 'VND',
+                    icon: Image.asset(
+                      'assets/icons/money.png',
+                      width: 40,
+                    )),
+                const SizedBox(height: 20),
+                TextFieldCustom(
+                  hintText: 'Mô tả',
+                  icon: Image.asset(
+                    'assets/icons/description.png',
+                    width: 40,
+                  ),
                 ),
               ],
             ),
           )
         ]),
       ),
+      bottomNavigationBar: BottomAppBar(
+          surfaceTintColor: Colors.transparent,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Button(
+                textButton: 'LƯU',
+                onButtonPressed: onSave,
+                bgColor: Colors.green,
+              ),
+            ],
+          )),
     );
+  }
+
+  onSave() {
+    String accountsValue = _accountsController.text;
+    if (accountsValue.isEmpty) {
+      toastification.show(
+          context: context,
+          title: const Text(
+            'Tên tài khoản không được để trống!',
+            style: TextStyle(fontSize: 14),
+          ),
+          type: ToastificationType.warning,
+          autoCloseDuration: const Duration(seconds: 5),
+          closeButtonShowType: CloseButtonShowType.none,
+          style: ToastificationStyle.flatColored,
+          borderRadius: BorderRadius.circular(50),
+          closeOnClick: true,
+          animationDuration: const Duration(milliseconds: 100),
+          showProgressBar: false);
+      focusNode.requestFocus();
+    }
   }
 }

@@ -11,11 +11,11 @@ class HomeAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     String date = getCurrentDateTime();
     return Container(
-      color: const Color(0xFFF5F5F8),
+      color: const Color(0xFFefeff2),
       padding: const EdgeInsets.only(top: 20, left: 16, right: 16),
       child: AppBar(
-        surfaceTintColor: const Color(0xFFF5F5F8),
-        backgroundColor: const Color(0xFFF5F5F8),
+        surfaceTintColor: const Color(0xFFefeff2),
+        backgroundColor: const Color(0xFFefeff2),
         leading: SvgPicture.asset('assets/icons/avatar.svg'),
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

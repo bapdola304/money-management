@@ -19,7 +19,7 @@ class _HomeState extends State<Home> {
       appBar: const PreferredSize(
           preferredSize: Size.fromHeight(80), child: HomeAppBar()),
       body: Container(
-        color: const Color(0xFFF5F5F8),
+        color: const Color(0xFFefeff2),
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

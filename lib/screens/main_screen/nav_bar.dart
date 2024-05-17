@@ -22,8 +22,8 @@ class NavBar extends StatelessWidget {
       ),
       child: BottomAppBar(
         elevation: 0.0,
-        color: const Color(0xFFF5F5F8),
-        surfaceTintColor: const Color(0xFFF5F5F8),
+        color: const Color(0xFFefeff2),
+        surfaceTintColor: const Color(0xFFefeff2),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(20),
           child: Container(

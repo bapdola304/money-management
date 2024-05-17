@@ -23,7 +23,7 @@ class Button extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    return Container(
+    return SizedBox(
       width: width ?? screenWidth,
       height: 48,
       child: ElevatedButton(
@@ -32,7 +32,7 @@ class Button extends StatelessWidget {
           },
           style: ElevatedButton.styleFrom(
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30),
+                borderRadius: BorderRadius.circular(15),
               ),
               backgroundColor: bgColor),
           child: Padding(
