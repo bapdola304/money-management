@@ -44,7 +44,7 @@ class TypeSelect extends StatelessWidget {
                 // width: 50,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(5),
-                  color: Colors.grey,
+                  color: Colors.grey.withOpacity(0.5),
                 ),
               )
             ],

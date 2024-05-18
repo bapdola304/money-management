@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:money_management/components/button.dart';
+import 'package:money_management/components/currency_input.dart';
 import 'package:money_management/components/text_field_custom.dart';
 import 'package:money_management/screens/accounts/components/TypeSelect.dart';
 import 'package:money_management/utils/currence_format.dart';
@@ -43,49 +44,13 @@ class _CreateAccountState extends State<CreateAccount> {
         color: const Color(0xFFefeff2),
         child: Column(children: [
           Container(
-            color: Colors.white,
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-              const Text('Số dư ban đầu'),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  SizedBox(
-                    width: size.width * 0.7,
-                    child: TextField(
-                        controller: _controller,
-                        style: const TextStyle(
-                            fontSize: 30,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.green),
-                        textAlign: TextAlign.right,
-                        decoration: const InputDecoration(
-                          border: UnderlineInputBorder(),
-                          contentPadding: EdgeInsets.symmetric(vertical: 0),
-                        ),
-                        keyboardType: TextInputType.number,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly,
-                        ],
-                        onChanged: (value) {
-                          String formattedValue = formatCurrency(value);
-                          _controller.value = TextEditingValue(
-                            text: formattedValue,
-                            selection: TextSelection.collapsed(
-                                offset: formattedValue.length),
-                          );
-                        }),
-                  ),
-                  const SizedBox(width: 8),
-                  const Text(
-                    '₫',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-                  )
-                ],
-              ),
-            ]),
-          ),
+              color: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              child: CurrencyInput(
+                controller: _controller,
+                text: 'Số dư ban đầu',
+                numberColor: Colors.green,
+              )),
           const SizedBox(height: 10),
           Container(
             color: Colors.white,

@@ -5,3 +5,8 @@ String getCurrentDateTime() {
   DateFormat formatter = DateFormat('dd/MM/yyyy, HH:mm a');
   return formatter.format(now);
 }
+
+String formatDateTime(DateTime date) {
+  DateFormat formatter = DateFormat('dd/MM/yyyy');
+  return formatter.format(date);
+}

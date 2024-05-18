@@ -35,6 +35,9 @@ class TextFieldCustom extends StatelessWidget {
             textCapitalization: TextCapitalization.words,
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
             decoration: InputDecoration(
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.grey.withOpacity(0.5)),
+                ),
                 border: UnderlineInputBorder(),
                 contentPadding: EdgeInsets.symmetric(vertical: 0),
                 hintText: hintText,
