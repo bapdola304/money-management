@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:money_management/components/currency_input.dart';
 import 'package:money_management/components/text_field_custom.dart';
 import 'package:money_management/data/data.dart';
 import 'package:money_management/screens/accounts/components/TypeSelect.dart';
 import 'components/category_dropdown_menu/category_dropdown_menu.dart';
-import 'package:money_management/utils/currence_format.dart';
 import 'package:money_management/utils/date_format.dart';
 import 'package:money_management/components/button.dart';
 

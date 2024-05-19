@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:money_management/data/data.dart';
 import 'package:money_management/screens/accounts/components/TypeSelect.dart';
-import 'package:money_management/screens/create_expend/components/category_dropdown_menu/children.dart';
 import 'package:money_management/screens/create_expend/components/category_dropdown_menu/item.dart';
 import 'package:mirai_dropdown_menu/mirai_dropdown_menu.dart';
 

@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:money_management/screens/main_screen/main_screen.dart';
-import 'package:device_preview/device_preview.dart';
+import 'package:money_management/screens/auth/login.dart';
 import 'package:toastification/toastification.dart';
 
 void main() {
-  runApp(DevicePreview(
-    builder: (context) => MyApp(), // Wrap your app
-  ));
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -22,7 +19,7 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
           useMaterial3: true,
         ),
-        home: const MainScreen(),
+        home: LoginScreen(),
       ),
     );
   }

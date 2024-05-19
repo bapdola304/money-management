@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:money_management/components/button.dart';
 import 'package:money_management/components/currency_input.dart';
 import 'package:money_management/components/text_field_custom.dart';
 import 'package:money_management/screens/accounts/components/TypeSelect.dart';
-import 'package:money_management/utils/currence_format.dart';
 import 'package:toastification/toastification.dart';
 
 class CreateAccount extends StatefulWidget {
@@ -21,7 +19,6 @@ class _CreateAccountState extends State<CreateAccount> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.green,
