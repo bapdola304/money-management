@@ -5,11 +5,13 @@ class InputCustom extends StatelessWidget {
       {Key? key,
       required this.label,
       required this.obscureText,
-      this.validator})
+      this.validator,
+      this.controller})
       : super(key: key);
   final String label;
   final bool obscureText;
   final String? Function(String?)? validator;
+  final TextEditingController? controller;
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +27,7 @@ class InputCustom extends StatelessWidget {
           height: 5,
         ),
         TextFormField(
+          controller: controller,
           autovalidateMode: AutovalidateMode.onUserInteraction,
           validator: validator,
           obscureText: obscureText,
