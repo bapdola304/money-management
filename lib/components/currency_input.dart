@@ -18,7 +18,7 @@ class CurrencyInput extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-      const Text('Số tiền'),
+      Text(text),
       Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [

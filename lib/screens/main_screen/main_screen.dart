@@ -72,19 +72,7 @@ class _MainScreenState extends State<MainScreen> {
             }
           },
         ),
-        body: IndexedStack(
-          index: selectedTab,
-          children: items
-              .map((page) => Navigator(
-                    key: page.navKey,
-                    onGenerateInitialRoutes: (navigator, initialRoute) {
-                      return [
-                        MaterialPageRoute(builder: (context) => page.page)
-                      ];
-                    },
-                  ))
-              .toList(),
-        ),
+        body: items[selectedTab].page,
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: Container(
           margin: const EdgeInsets.only(top: 30),

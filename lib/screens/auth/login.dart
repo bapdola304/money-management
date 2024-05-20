@@ -5,6 +5,8 @@ import 'package:money_management/screens/auth/components/button_custom.dart';
 import 'package:money_management/screens/auth/components/input_custom.dart';
 import 'package:money_management/screens/auth/signup.dart';
 import 'package:money_management/screens/main_screen/main_screen.dart';
+import 'package:money_management/storage/locator.dart';
+import 'package:money_management/storage/user_storage.dart';
 import 'package:provider/provider.dart';
 import 'package:toastification/toastification.dart';
 import 'package:wc_form_validators/wc_form_validators.dart';
@@ -18,23 +20,26 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final sharedPrefService = serviceLocator<UserStorage>();
 
-  bool checkLogin(String username, String password, List<User> userList) {
+  User? checkLogin(String username, String password, List<User> userList) {
     for (User user in userList) {
       if (user.username == username && user.password == password) {
-        return true;
+        return user;
       }
     }
-    return false;
+    return null;
   }
 
   void handleLogin() async {
     if (_formKey.currentState!.validate()) {
       FocusScope.of(context).unfocus();
       List<User> userList = await context.read<UserProvider>().getAllUsers();
-      bool isLogined = checkLogin(
+      User? user = checkLogin(
           _usernameController.text, _passwordController.text, userList);
-      if (isLogined) {
+      if (user != null) {
+        sharedPrefService.saveUserData(
+            user.id ?? "", user.username, user.fullName);
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (context) => MainScreen()),
             (route) => false);

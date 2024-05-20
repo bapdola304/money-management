@@ -1,16 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:money_management/model/account.dart';
 import 'package:money_management/utils/currence_format.dart';
 
 class AccountList extends StatelessWidget {
   final Function()? onActionsPressed;
   final Function()? onItemClicked;
-  const AccountList({super.key, this.onActionsPressed, this.onItemClicked});
+  final List<Account> accountList;
+  const AccountList(
+      {super.key,
+      this.onActionsPressed,
+      this.onItemClicked,
+      required this.accountList});
+
+  String formatCurrencyData(int value) {
+    String formattedValue = formatCurrency(value.toString());
+    return '-$formattedValue ₫';
+  }
 
   @override
   Widget build(BuildContext context) {
-    String formattedValue = formatCurrency("50000000");
     return ListView.builder(
-      itemCount: 10,
+      itemCount: accountList.length,
       itemBuilder: (context, index) => InkWell(
         onTap: onItemClicked,
         child: Container(
@@ -46,12 +56,12 @@ class AccountList extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('Dòng text thứ nhất có rất nhiều chữ',
+                    Text(accountList[index].accountName,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                             fontSize: 15, fontWeight: FontWeight.bold)),
-                    Text('-$formattedValue ₫',
+                    Text(formatCurrencyData(accountList[index].accountBalance),
                         style: const TextStyle(fontSize: 14, color: Colors.red))
                   ],
                 ),

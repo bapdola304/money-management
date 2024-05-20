@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:money_management/provider/account_provider.dart';
 import 'package:money_management/screens/accounts/components/account_bottom_sheet.dart';
 import 'package:money_management/screens/accounts/components/account_list.dart';
 import 'package:money_management/screens/accounts/create_account.dart';
 import 'package:money_management/screens/accounts/expend.dart';
+import 'package:money_management/storage/locator.dart';
+import 'package:money_management/storage/user_storage.dart';
+import 'package:provider/provider.dart';
 
 class Accounts extends StatefulWidget {
   const Accounts({Key? key}) : super(key: key);
@@ -12,6 +16,14 @@ class Accounts extends StatefulWidget {
 }
 
 class _AccountsState extends State<Accounts> {
+  final sharedPrefService = serviceLocator<UserStorage>();
+  @override
+  void initState() {
+    super.initState();
+    final userId = sharedPrefService.getUserId() ?? "";
+    context.read<AccountProvider>().getAllAccounts(userId);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -32,12 +44,17 @@ class _AccountsState extends State<Accounts> {
           color: const Color(0xFFefeff2),
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Expanded(
-            child: AccountList(
-                onItemClicked: () => Navigator.of(context, rootNavigator: true)
-                        .push(MaterialPageRoute(
-                      builder: (context) => const Expend(),
-                    )),
-                onActionsPressed: () => onActionsPressed(context)),
+            child: Consumer<AccountProvider>(
+                builder: (context, accountProviderData, child) {
+              return AccountList(
+                  accountList: accountProviderData.accounts,
+                  onItemClicked: () =>
+                      Navigator.of(context, rootNavigator: true)
+                          .push(MaterialPageRoute(
+                        builder: (context) => const Expend(),
+                      )),
+                  onActionsPressed: () => onActionsPressed(context));
+            }),
           ),
         ),
         floatingActionButton: FloatingActionButton(
