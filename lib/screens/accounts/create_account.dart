@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:money_management/components/button.dart';
 import 'package:money_management/components/currency_input.dart';
+import 'package:money_management/components/show_toastification.dart';
 import 'package:money_management/components/text_field_custom.dart';
+import 'package:money_management/model/account.dart';
+import 'package:money_management/provider/account_provider.dart';
 import 'package:money_management/screens/accounts/components/TypeSelect.dart';
-import 'package:toastification/toastification.dart';
+import 'package:money_management/storage/locator.dart';
+import 'package:money_management/storage/user_storage.dart';
+import 'package:money_management/utils/currence_format.dart';
+import 'package:provider/provider.dart';
 
 class CreateAccount extends StatefulWidget {
   const CreateAccount({Key? key}) : super(key: key);
@@ -13,9 +19,12 @@ class CreateAccount extends StatefulWidget {
 }
 
 class _CreateAccountState extends State<CreateAccount> {
-  TextEditingController _controller = TextEditingController(text: '0');
-  TextEditingController _accountsController = TextEditingController();
+  final TextEditingController _amountController =
+      TextEditingController(text: '0');
+  final TextEditingController _accountNameController = TextEditingController();
+  final TextEditingController _desController = TextEditingController();
   var focusNode = FocusNode();
+  final sharedPrefService = serviceLocator<UserStorage>();
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +44,18 @@ class _CreateAccountState extends State<CreateAccount> {
           style: TextStyle(
               color: Colors.white, fontWeight: FontWeight.w600, fontSize: 18),
         ),
+        actions: [
+          IconButton(
+              onPressed: () {
+                onSave();
+              },
+              tooltip: 'Lưu',
+              icon: const Icon(
+                Icons.check_rounded,
+                color: Colors.white,
+                size: 30,
+              ))
+        ],
         centerTitle: true,
       ),
       body: Container(
@@ -44,7 +65,7 @@ class _CreateAccountState extends State<CreateAccount> {
               color: Colors.white,
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               child: CurrencyInput(
-                controller: _controller,
+                controller: _amountController,
                 text: 'Số dư ban đầu',
                 numberColor: Colors.green,
               )),
@@ -55,7 +76,7 @@ class _CreateAccountState extends State<CreateAccount> {
             child: Column(
               children: [
                 TextFieldCustom(
-                  controller: _accountsController,
+                  controller: _accountNameController,
                   focusNode: focusNode,
                   hintText: 'Tên tài khoản',
                   icon: Image.asset(
@@ -80,6 +101,7 @@ class _CreateAccountState extends State<CreateAccount> {
                 const SizedBox(height: 20),
                 TextFieldCustom(
                   hintText: 'Mô tả',
+                  controller: _desController,
                   icon: Image.asset(
                     'assets/icons/description.png',
                     width: 40,
@@ -106,23 +128,28 @@ class _CreateAccountState extends State<CreateAccount> {
   }
 
   onSave() {
-    String accountsValue = _accountsController.text;
+    String accountsValue = _accountNameController.text.trim();
+    final userId = sharedPrefService.getUserId() ?? "";
     if (accountsValue.isEmpty) {
-      toastification.show(
-          context: context,
-          title: const Text(
-            'Tên tài khoản không được để trống!',
-            style: TextStyle(fontSize: 14),
-          ),
-          type: ToastificationType.warning,
-          autoCloseDuration: const Duration(seconds: 5),
-          closeButtonShowType: CloseButtonShowType.none,
-          style: ToastificationStyle.flatColored,
-          borderRadius: BorderRadius.circular(50),
-          closeOnClick: true,
-          animationDuration: const Duration(milliseconds: 100),
-          showProgressBar: false);
+      showToastification(
+          'Tên tài khoản không được để trống!', 'warning', context);
       focusNode.requestFocus();
+      return;
     }
+    Account accountRequest = Account(
+        accountName: _accountNameController.text,
+        accountBalance: parseCurrency(_amountController.text),
+        userId: userId,
+        description: _desController.text);
+    context
+        .read<AccountProvider>()
+        .createAccount(accountRequest)
+        .then((response) {
+      if (response.statusCode == 201) {
+        showToastification('Thêm tài khoản thành công!', 'success', context);
+        context.read<AccountProvider>().getAllAccounts(userId);
+        Navigator.pop(context);
+      }
+    });
   }
 }

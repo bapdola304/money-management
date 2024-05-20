@@ -3,11 +3,14 @@ class Account {
   final String accountName;
   final int accountBalance;
   final String description;
-  Account(
-      {required this.accountName,
-      required this.accountBalance,
-      required this.description,
-      this.id});
+  final String userId;
+  Account({
+    required this.accountName,
+    required this.accountBalance,
+    required this.description,
+    this.id,
+    required this.userId,
+  });
 
   factory Account.fromMap(Map<String, dynamic> map) {
     return Account(
@@ -15,13 +18,15 @@ class Account {
       accountName: map['accountName'],
       accountBalance: map['accountBalance'],
       description: map['description'],
+      userId: map['userId'],
     );
   }
   Map<String, dynamic> toJson() {
     return {
       'accountName': accountName,
       'accountBalance': accountBalance,
-      'description': description
+      'description': description,
+      'userId': userId
     };
   }
 }

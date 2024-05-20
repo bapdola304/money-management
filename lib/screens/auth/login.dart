@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:money_management/components/show_toastification.dart';
 import 'package:money_management/model/user.dart';
 import 'package:money_management/provider/user_provider.dart';
 import 'package:money_management/screens/auth/components/button_custom.dart';
@@ -8,7 +9,6 @@ import 'package:money_management/screens/main_screen/main_screen.dart';
 import 'package:money_management/storage/locator.dart';
 import 'package:money_management/storage/user_storage.dart';
 import 'package:provider/provider.dart';
-import 'package:toastification/toastification.dart';
 import 'package:wc_form_validators/wc_form_validators.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -44,20 +44,8 @@ class _LoginScreenState extends State<LoginScreen> {
             MaterialPageRoute(builder: (context) => MainScreen()),
             (route) => false);
       } else {
-        toastification.show(
-            context: context,
-            title: const Text(
-              'Tài khoản hoặc mật khẩu không chính xác',
-              style: TextStyle(fontSize: 14),
-            ),
-            type: ToastificationType.error,
-            autoCloseDuration: const Duration(seconds: 5),
-            closeButtonShowType: CloseButtonShowType.none,
-            style: ToastificationStyle.flatColored,
-            borderRadius: BorderRadius.circular(50),
-            closeOnClick: true,
-            animationDuration: const Duration(milliseconds: 100),
-            showProgressBar: false);
+        showToastification(
+            'Tài khoản hoặc mật khẩu không chính xác!', 'error', context);
       }
     }
   }

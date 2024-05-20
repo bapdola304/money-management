@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:money_management/components/show_toastification.dart';
 import 'package:money_management/model/user.dart';
 import 'package:money_management/provider/user_provider.dart';
 import 'package:money_management/screens/auth/components/button_custom.dart';
 import 'package:money_management/screens/auth/components/input_custom.dart';
 import 'package:money_management/screens/auth/login.dart';
 import 'package:provider/provider.dart';
-import 'package:toastification/toastification.dart';
 import 'package:wc_form_validators/wc_form_validators.dart';
 
 class SignupPage extends StatefulWidget {
@@ -46,20 +46,7 @@ class _SignupPageState extends State<SignupPage> {
       FocusScope.of(context).unfocus();
       List<User> userList = await context.read<UserProvider>().getAllUsers();
       if (checkUsernameIsExist(_usernameController.text, userList)) {
-        toastification.show(
-            context: context,
-            title: const Text(
-              'Tài khoản đã tồn tại',
-              style: TextStyle(fontSize: 14),
-            ),
-            type: ToastificationType.warning,
-            autoCloseDuration: const Duration(seconds: 5),
-            closeButtonShowType: CloseButtonShowType.none,
-            style: ToastificationStyle.flatColored,
-            borderRadius: BorderRadius.circular(50),
-            closeOnClick: true,
-            animationDuration: const Duration(milliseconds: 100),
-            showProgressBar: false);
+        showToastification('Tài khoản đã tồn tại!', 'warning', context);
         return;
       }
       User user = User(
@@ -69,20 +56,8 @@ class _SignupPageState extends State<SignupPage> {
       final response = await context.read<UserProvider>().singUpUser(user);
       if (response.statusCode == 201) {
         clearForm();
-        toastification.show(
-            context: context,
-            title: const Text(
-              'Đăng ký tài khoản thành công',
-              style: TextStyle(fontSize: 14),
-            ),
-            type: ToastificationType.success,
-            autoCloseDuration: const Duration(seconds: 5),
-            closeButtonShowType: CloseButtonShowType.none,
-            style: ToastificationStyle.flatColored,
-            borderRadius: BorderRadius.circular(50),
-            closeOnClick: true,
-            animationDuration: const Duration(milliseconds: 100),
-            showProgressBar: false);
+        showToastification(
+            'TĐăng ký tài khoản thành công!', 'success', context);
         Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
           builder: (context) => LoginScreen(),
         ));

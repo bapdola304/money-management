@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:money_management/model/account.dart';
-import 'package:money_management/model/user.dart';
 import 'package:money_management/services/account_service.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
@@ -22,5 +21,12 @@ class AccountProvider extends ChangeNotifier {
       debugPrint(e.toString());
       EasyLoading.dismiss();
     }
+  }
+
+  Future<dynamic> createAccount(Account body) async {
+    EasyLoading.show();
+    final response = await _service.createAccount(body);
+    EasyLoading.dismiss();
+    return response;
   }
 }
