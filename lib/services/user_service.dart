@@ -17,4 +17,10 @@ class UserService {
     }
     return [];
   }
+
+  Future<dynamic> singUpUser(User body) async {
+    const url = '/user';
+    final response = await request.post(url, body);
+    return response;
+  }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class InputCustom extends StatelessWidget {
+class InputCustom extends StatefulWidget {
   const InputCustom(
       {Key? key,
       required this.label,
@@ -14,12 +14,33 @@ class InputCustom extends StatelessWidget {
   final TextEditingController? controller;
 
   @override
+  State<InputCustom> createState() => _InputCustomState();
+}
+
+class _InputCustomState extends State<InputCustom> {
+  bool _obscured = false;
+
+  void _toggleObscured() {
+    setState(() {
+      _obscured = !_obscured;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      _obscured = widget.obscureText;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          label,
+          widget.label,
           style: const TextStyle(
               fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black87),
         ),
@@ -27,16 +48,31 @@ class InputCustom extends StatelessWidget {
           height: 5,
         ),
         TextFormField(
-          controller: controller,
+          controller: widget.controller,
           autovalidateMode: AutovalidateMode.onUserInteraction,
-          validator: validator,
-          obscureText: obscureText,
-          decoration: const InputDecoration(
-              contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey),
+          validator: widget.validator,
+          obscureText: _obscured,
+          decoration: InputDecoration(
+              contentPadding:
+                  const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+              suffixIcon: widget.obscureText
+                  ? Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 0, 4, 0),
+                      child: InkWell(
+                        onTap: _toggleObscured,
+                        child: Icon(
+                          _obscured
+                              ? Icons.visibility_rounded
+                              : Icons.visibility_off_rounded,
+                          size: 24,
+                        ),
+                      ),
+                    )
+                  : null,
+              enabledBorder: const OutlineInputBorder(
+                borderSide: const BorderSide(color: Colors.grey),
               ),
-              border: OutlineInputBorder(
+              border: const OutlineInputBorder(
                   borderSide: BorderSide(color: Colors.grey))),
         ),
         const SizedBox(

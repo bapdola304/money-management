@@ -1,16 +1,100 @@
 import 'package:flutter/material.dart';
+import 'package:money_management/model/user.dart';
+import 'package:money_management/provider/user_provider.dart';
 import 'package:money_management/screens/auth/components/button_custom.dart';
 import 'package:money_management/screens/auth/components/input_custom.dart';
 import 'package:money_management/screens/auth/login.dart';
+import 'package:provider/provider.dart';
+import 'package:toastification/toastification.dart';
+import 'package:wc_form_validators/wc_form_validators.dart';
 
-class SignupPage extends StatelessWidget {
+class SignupPage extends StatefulWidget {
+  @override
+  State<SignupPage> createState() => _SignupPageState();
+}
+
+class _SignupPageState extends State<SignupPage> {
   final _formKey = GlobalKey<FormState>();
+
+  final TextEditingController _usernameController = TextEditingController();
+
+  final TextEditingController _passwordController = TextEditingController();
+
+  final TextEditingController _fullNameController = TextEditingController();
 
   String? validatorCommon(String? value, String inputName) {
     if (value == null || value.isEmpty) {
       return 'Vui lòng nhập $inputName';
     }
+    if (value != _passwordController.text) {
+      return 'Mật khẩu xác nhận không giống với mật khẩu';
+    }
     return null;
+  }
+
+  bool checkUsernameIsExist(String username, List<User> userList) {
+    for (User user in userList) {
+      if (user.username == username) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  void handleSingUp() async {
+    if (_formKey.currentState!.validate()) {
+      FocusScope.of(context).unfocus();
+      List<User> userList = await context.read<UserProvider>().getAllUsers();
+      if (checkUsernameIsExist(_usernameController.text, userList)) {
+        toastification.show(
+            context: context,
+            title: const Text(
+              'Tài khoản đã tồn tại',
+              style: TextStyle(fontSize: 14),
+            ),
+            type: ToastificationType.warning,
+            autoCloseDuration: const Duration(seconds: 5),
+            closeButtonShowType: CloseButtonShowType.none,
+            style: ToastificationStyle.flatColored,
+            borderRadius: BorderRadius.circular(50),
+            closeOnClick: true,
+            animationDuration: const Duration(milliseconds: 100),
+            showProgressBar: false);
+        return;
+      }
+      User user = User(
+          username: _usernameController.text,
+          fullName: _fullNameController.text,
+          password: _passwordController.text);
+      final response = await context.read<UserProvider>().singUpUser(user);
+      if (response.statusCode == 201) {
+        clearForm();
+        toastification.show(
+            context: context,
+            title: const Text(
+              'Đăng ký tài khoản thành công',
+              style: TextStyle(fontSize: 14),
+            ),
+            type: ToastificationType.success,
+            autoCloseDuration: const Duration(seconds: 5),
+            closeButtonShowType: CloseButtonShowType.none,
+            style: ToastificationStyle.flatColored,
+            borderRadius: BorderRadius.circular(50),
+            closeOnClick: true,
+            animationDuration: const Duration(milliseconds: 100),
+            showProgressBar: false);
+        Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
+          builder: (context) => LoginScreen(),
+        ));
+      }
+    }
+  }
+
+  void clearForm() {
+    _formKey.currentState?.reset();
+    _usernameController.clear();
+    _passwordController.clear();
+    _fullNameController.clear();
   }
 
   @override
@@ -32,35 +116,47 @@ class SignupPage extends StatelessWidget {
                 child: Column(
                   children: <Widget>[
                     InputCustom(
-                      label: 'Tài khoản',
-                      obscureText: false,
-                      validator: (value) => validatorCommon(value, 'tài khoản'),
-                    ),
+                        label: 'Tên người dùng',
+                        controller: _fullNameController,
+                        obscureText: false,
+                        validator: Validators.required(
+                            'Vui lòng nhập tên người dùng')),
                     InputCustom(
-                      label: 'Tên người dùng',
+                      label: 'Tài khoản',
+                      controller: _usernameController,
                       obscureText: false,
-                      validator: (value) =>
-                          validatorCommon(value, 'tên người dùng'),
+                      validator: Validators.compose([
+                        Validators.required('Vui lòng nhập tài khoản'),
+                        Validators.patternRegExp(RegExp(r"^[A-Za-z0-9]+$"),
+                            'Tài khoản không chứa ký tự đặc biệt'),
+                        Validators.minLength(
+                            3, 'Tài khoản phải có ít nhất 3 ký tự')
+                      ]),
                     ),
                     InputCustom(
                       label: 'Mật khẩu',
+                      controller: _passwordController,
                       obscureText: true,
-                      validator: (value) => validatorCommon(value, 'mật khẩu'),
+                      validator: Validators.compose([
+                        Validators.required('Vui lòng nhập mật khẩu'),
+                        Validators.patternRegExp(
+                            RegExp(r"^[A-Za-z0-9@#$%^&*]+$"),
+                            'Mật không chứa ký tự đặc biệt ngoài: [@#\$%^&*]'),
+                        Validators.minLength(
+                            6, 'Mật khẩu phải có ít nhất 6 ký tự')
+                      ]),
                     ),
                     InputCustom(
-                      label: 'Xác nhận mật khẩu',
-                      obscureText: true,
-                      validator: (value) =>
-                          validatorCommon(value, 'mật khẩu xác nhận'),
-                    )
+                        label: 'Xác nhận mật khẩu',
+                        obscureText: true,
+                        validator: (value) =>
+                            validatorCommon(value, 'mật khẩu xác nhận'))
                   ],
                 ),
               ),
               ButtonCustom(
                 textButton: 'Đăng ký',
-                onButtonPressed: () {
-                  if (_formKey.currentState!.validate()) {}
-                },
+                onButtonPressed: handleSingUp,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,

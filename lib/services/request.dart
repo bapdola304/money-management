@@ -12,15 +12,15 @@ class Request {
   final String baseUrl = "https://mphjhpsbcqpgqilshxwe.supabase.co/rest/v1";
   Future<dynamic> get(String url) async {
     final uri = Uri.parse(baseUrl + url);
-    debugPrint(uri.toString());
     var response = await http.get(uri, headers: headers);
     return response;
   }
 
-  Future<dynamic> post(String url, body) async {
-    final uri = Uri.parse(url);
+  Future<dynamic> post(String url, dynamic body) async {
+    final uri = Uri.parse(baseUrl + url);
     var response =
         await http.post(uri, headers: headers, body: json.encode(body));
+    debugPrint(response.toString());
     return response;
   }
 }

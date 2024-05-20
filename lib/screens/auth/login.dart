@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:money_management/components/loading_overlay.dart';
 import 'package:money_management/model/user.dart';
 import 'package:money_management/provider/user_provider.dart';
 import 'package:money_management/screens/auth/components/button_custom.dart';
@@ -8,6 +7,7 @@ import 'package:money_management/screens/auth/signup.dart';
 import 'package:money_management/screens/main_screen/main_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:toastification/toastification.dart';
+import 'package:wc_form_validators/wc_form_validators.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -19,28 +19,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  @override
-  void initState() {
-    super.initState();
-    getAllUsers();
-  }
-
-  void getAllUsers() async {
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      LoadingOverlay.of(context).show();
-      await context.read<UserProvider>().getAllUsers();
-      LoadingOverlay.of(context).hide();
-    });
-  }
-
-  String? validatorCommon(String? value, String inputName) {
-    debugPrint(value);
-    if (value == null || value.isEmpty) {
-      return 'Vui lòng nhập tên $inputName';
-    }
-    return null;
-  }
-
   bool checkLogin(String username, String password, List<User> userList) {
     for (User user in userList) {
       if (user.username == username && user.password == password) {
@@ -50,13 +28,13 @@ class _LoginScreenState extends State<LoginScreen> {
     return false;
   }
 
-  void handleLogin() {
+  void handleLogin() async {
     if (_formKey.currentState!.validate()) {
-      List<User> userList = context.read<UserProvider>().users;
+      FocusScope.of(context).unfocus();
+      List<User> userList = await context.read<UserProvider>().getAllUsers();
       bool isLogined = checkLogin(
           _usernameController.text, _passwordController.text, userList);
       if (isLogined) {
-        FocusScope.of(context).unfocus();
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (context) => MainScreen()),
             (route) => false);
@@ -105,15 +83,26 @@ class _LoginScreenState extends State<LoginScreen> {
                               label: 'Tài khoản',
                               controller: _usernameController,
                               obscureText: false,
-                              validator: (value) =>
-                                  validatorCommon(value, 'tài khoản')),
+                              validator: Validators.compose([
+                                Validators.required('Vui lòng nhập tài khoản'),
+                                Validators.patternRegExp(
+                                    RegExp(r"^[A-Za-z0-9]+$"),
+                                    'Tài khoản không chứa ký tự đặc biệt'),
+                                Validators.minLength(
+                                    3, 'Tài khoản phải có ít nhất 3 ký tự')
+                              ])),
                           InputCustom(
-                            label: 'Mật khẩu',
-                            controller: _passwordController,
-                            obscureText: true,
-                            validator: (value) =>
-                                validatorCommon(value, 'mật khẩu'),
-                          )
+                              label: 'Mật khẩu',
+                              controller: _passwordController,
+                              obscureText: true,
+                              validator: Validators.compose([
+                                Validators.required('Vui lòng nhập mật khẩu'),
+                                Validators.patternRegExp(
+                                    RegExp(r"^[A-Za-z0-9@#$%^&*]+$"),
+                                    'Mật không chứa ký tự đặc biệt ngoài: [@#\$%^&*]'),
+                                Validators.minLength(
+                                    6, 'Mật khẩu phải có ít nhất 6 ký tự')
+                              ]))
                         ],
                       ),
                     ),
