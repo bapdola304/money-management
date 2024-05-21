@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:money_management/components/currency_input.dart';
 import 'package:money_management/components/text_field_custom.dart';
-import 'package:money_management/data/data.dart';
+import 'package:money_management/model/category.dart';
 import 'package:money_management/screens/accounts/components/TypeSelect.dart';
 import 'components/category_dropdown_menu/category_dropdown_menu.dart';
 import 'package:money_management/utils/date_format.dart';
@@ -18,15 +18,13 @@ class _CreateExpendState extends State<CreateExpend> {
   TextEditingController _controller = TextEditingController(text: '0');
   TextEditingController _accountsController = TextEditingController();
   var focusNode = FocusNode();
-  late ValueNotifier<CategoryModel> categorySelected;
+  late ValueNotifier<CategoryModel> categorySelected =
+      ValueNotifier(CategoryModel(name: '', iconId: ''));
   DateTime selectedDate = DateTime.now();
 
   @override
   void initState() {
     super.initState();
-    setState(() {
-      categorySelected = ValueNotifier(listProjects[0]);
-    });
   }
 
   _selectDate(BuildContext context) async {
@@ -113,7 +111,6 @@ class _CreateExpendState extends State<CreateExpend> {
             child: Column(children: [
               const SizedBox(height: 20),
               CategoryDropdownMenu(
-                categoryList: listProjects,
                 onChanged: (category) {
                   setState(() {
                     categorySelected.value = category;
@@ -138,15 +135,14 @@ class _CreateExpendState extends State<CreateExpend> {
                 ),
               ),
               const SizedBox(height: 20),
-              CategoryDropdownMenu(
-                categoryList: listProjects,
-                onChanged: (category) {
-                  setState(() {
-                    categorySelected.value = category;
-                  });
-                },
-                category: categorySelected,
-              ),
+              // CategoryDropdownMenu(
+              //   onChanged: (category) {
+              //     setState(() {
+              //       categorySelected.value = category;
+              //     });
+              //   },
+              //   category: categorySelected,
+              // ),
               const SizedBox(height: 20),
             ]),
           )

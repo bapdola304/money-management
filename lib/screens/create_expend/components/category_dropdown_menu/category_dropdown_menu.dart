@@ -1,47 +1,64 @@
 import 'package:flutter/material.dart';
-import 'package:money_management/data/data.dart';
+import 'package:money_management/components/base64_image_widget.dart';
+import 'package:money_management/model/category.dart';
+import 'package:money_management/provider/category_provider.dart';
 import 'package:money_management/screens/accounts/components/TypeSelect.dart';
 import 'package:money_management/screens/create_expend/components/category_dropdown_menu/item.dart';
 import 'package:mirai_dropdown_menu/mirai_dropdown_menu.dart';
+import 'package:provider/provider.dart';
 
-class CategoryDropdownMenu extends StatelessWidget {
-  final List<CategoryModel> categoryList;
+class CategoryDropdownMenu extends StatefulWidget {
   final Function(CategoryModel category) onChanged;
   final ValueNotifier<CategoryModel> category;
   const CategoryDropdownMenu(
-      {super.key,
-      required this.categoryList,
-      required this.onChanged,
-      required this.category});
+      {super.key, required this.onChanged, required this.category});
+
+  @override
+  State<CategoryDropdownMenu> createState() => _CategoryDropdownMenuState();
+}
+
+class _CategoryDropdownMenuState extends State<CategoryDropdownMenu> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<CategoryProvider>().getCategoryList();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return MiraiDropDownMenu<CategoryModel>(
-      key: UniqueKey(),
-      children: categoryList,
-      valueNotifier: category,
-      showSearchTextField: true,
-      selectedItemBackgroundColor: Colors.green,
-      itemPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-      itemWidgetBuilder: (
-        int index,
-        CategoryModel? category, {
-        bool isItemSelected = true,
-      }) {
-        return DropDownItemWidget(
-          category: category,
-          isItemSelected: isItemSelected,
-        );
-      },
-      onChanged: onChanged,
-      child: ValueListenableBuilder<CategoryModel>(
-          key: GlobalKey(),
-          valueListenable: category,
-          builder: (_, CategoryModel categoryItem, __) {
-            return TypeSelect(
-                icon: Image.asset(categoryItem.icon, width: 35),
-                text: categoryItem.name);
-          }),
+    return Consumer<CategoryProvider>(
+      builder: (context, categoryProvider, child) =>
+          MiraiDropDownMenu<CategoryModel>(
+        key: UniqueKey(),
+        children: categoryProvider.categoryList,
+        valueNotifier: widget.category,
+        // showSearchTextField: true,
+        selectedItemBackgroundColor: Colors.green,
+        itemPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+        itemWidgetBuilder: (
+          int index,
+          CategoryModel? category, {
+          bool isItemSelected = true,
+        }) {
+          return DropDownItemWidget(
+            category: category,
+            isItemSelected: isItemSelected,
+          );
+        },
+        onChanged: widget.onChanged,
+        child: ValueListenableBuilder<CategoryModel>(
+            key: GlobalKey(),
+            valueListenable: widget.category,
+            builder: (_, CategoryModel categoryItem, __) {
+              return TypeSelect(
+                  emptyText: 'Chọn danh mục',
+                  icon: Base64ImageWidget(
+                    base64String: categoryItem.icon?.image,
+                    width: 40,
+                  ),
+                  text: categoryItem.name);
+            }),
+      ),
     );
   }
 }

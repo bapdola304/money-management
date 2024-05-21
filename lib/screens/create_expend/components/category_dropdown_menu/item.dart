@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:money_management/data/data.dart';
+import 'package:money_management/components/base64_image_widget.dart';
+import 'package:money_management/model/category.dart';
 
 class DropDownItemWidget extends StatelessWidget {
   const DropDownItemWidget({
@@ -21,7 +22,10 @@ class DropDownItemWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       child: Row(children: [
-        Image.asset(category?.icon ?? '', width: 40),
+        Base64ImageWidget(
+          base64String: category?.icon?.image,
+          width: 40,
+        ),
         const SizedBox(width: 10),
         Text(
           category?.name ?? '',

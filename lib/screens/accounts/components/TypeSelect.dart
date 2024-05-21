@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 
 class TypeSelect extends StatelessWidget {
   final String? text;
-  final Image? icon;
-  const TypeSelect({super.key, this.text = "", this.icon});
+  final String? emptyText;
+  final dynamic icon;
+  const TypeSelect({super.key, this.text = "", this.icon, this.emptyText});
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +33,7 @@ class TypeSelect extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    text ?? "",
+                    getText(),
                     style: TextStyle(fontSize: 18),
                   ),
                   Icon(Icons.keyboard_arrow_right_rounded)
@@ -52,5 +53,12 @@ class TypeSelect extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  String getText() {
+    if (text != null && text!.isNotEmpty) {
+      return text!;
+    }
+    return emptyText ?? "";
   }
 }
