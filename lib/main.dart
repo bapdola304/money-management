@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:money_management/components/loading.dart';
 import 'package:money_management/provider/account_provider.dart';
+import 'package:money_management/provider/category_provider.dart';
 import 'package:money_management/provider/user_provider.dart';
 import 'package:money_management/screens/auth/login.dart';
 import 'package:money_management/screens/main_screen/main_screen.dart';
@@ -49,6 +50,9 @@ class _MyAppState extends State<MyApp> {
         ),
         ChangeNotifierProvider<AccountProvider>(
           create: (context) => AccountProvider(context),
+        ),
+        ChangeNotifierProvider<CategoryProvider>(
+          create: (context) => CategoryProvider(context),
         ),
       ],
       child: ToastificationWrapper(

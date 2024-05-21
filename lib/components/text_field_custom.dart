@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class TextFieldCustom extends StatelessWidget {
   final String? hintText;
@@ -31,8 +32,8 @@ class TextFieldCustom extends StatelessWidget {
         Expanded(
           child: TextField(
             controller: controller,
+            inputFormatters: [CapitalizeFirstWordOnlyInputFormatter()],
             focusNode: focusNode,
-            textCapitalization: TextCapitalization.words,
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
             decoration: InputDecoration(
                 enabledBorder: UnderlineInputBorder(
@@ -45,6 +46,29 @@ class TextFieldCustom extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class CapitalizeFirstWordOnlyInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    if (newValue.text.isEmpty) {
+      return newValue;
+    }
+
+    String text = newValue.text;
+    String formattedText;
+
+    // Viết hoa chữ cái đầu tiên và giữ các từ còn lại ở dạng chữ thường
+    formattedText = text[0].toUpperCase() + text.substring(1).toLowerCase();
+
+    return newValue.copyWith(
+      text: formattedText,
+      selection: newValue.selection,
     );
   }
 }

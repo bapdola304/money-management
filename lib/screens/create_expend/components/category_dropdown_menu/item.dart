@@ -1,7 +1,3 @@
-/*
-* Created By Mirai Devs.
-* On 24/6/2022.
-*/
 import 'package:flutter/material.dart';
 import 'package:money_management/data/data.dart';
 
