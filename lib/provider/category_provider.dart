@@ -10,6 +10,8 @@ class CategoryProvider extends ChangeNotifier {
   final _service = CategoryService();
   List<IconModel> _icons = [];
   List<IconModel> get icons => _icons;
+  List<CategoryModel> _categoryList = [];
+  List<CategoryModel> get categoryList => _categoryList;
 
   Future<void> getIcons() async {
     EasyLoading.show();
@@ -24,5 +26,13 @@ class CategoryProvider extends ChangeNotifier {
     final response = await _service.createCategory(body);
     EasyLoading.dismiss();
     return response;
+  }
+
+  Future<void> getCategoryList() async {
+    EasyLoading.show();
+    final response = await _service.getCategoryList();
+    EasyLoading.dismiss();
+    _categoryList = response;
+    notifyListeners();
   }
 }

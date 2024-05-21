@@ -29,6 +29,7 @@ class _CreateCategoryState extends State<Category> {
   @override
   void initState() {
     super.initState();
+    context.read<CategoryProvider>().getCategoryList();
   }
 
   onActionsPressed(BuildContext context) {
@@ -43,7 +44,7 @@ class _CreateCategoryState extends State<Category> {
     if (_formKey.currentState!.validate()) {
       CategoryModel category = CategoryModel(
         name: _categoryNameController.text,
-        iconId: iconSelected.value.id,
+        iconId: iconSelected.value.id ?? "",
       );
       context
           .read<CategoryProvider>()
@@ -51,6 +52,7 @@ class _CreateCategoryState extends State<Category> {
           .then((response) {
         if (response.statusCode == 201) {
           showToastification('Thêm hạng mục thành công!', 'success', context);
+          context.read<CategoryProvider>().getCategoryList();
           Navigator.pop(context);
           _formKey.currentState!.reset();
         }
@@ -154,9 +156,13 @@ class _CreateCategoryState extends State<Category> {
                 : Container(),
             const SizedBox(height: 10),
             Expanded(
-                child: CategoryTabList(
-                    onItemClicked: () {},
-                    onActionsPressed: () => onActionsPressed(context)))
+                child: Consumer<CategoryProvider>(
+              builder: (context, categoryProviderData, child) =>
+                  CategoryTabList(
+                      categoryList: categoryProviderData.categoryList,
+                      onItemClicked: () {},
+                      onActionsPressed: () => onActionsPressed(context)),
+            ))
           ],
         ),
       ),

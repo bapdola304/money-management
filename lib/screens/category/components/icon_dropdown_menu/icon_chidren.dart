@@ -15,7 +15,7 @@ class DropDownIconChildWidget extends StatelessWidget {
     return Row(
       children: [
         isIconSelected
-            ? Base64ImageWidget(base64String: icon)
+            ? Base64ImageWidget(base64String: icon, width: 60)
             : Image.asset('assets/icons/empty_icon.png', width: 60),
         const SizedBox(width: 10),
         Text(

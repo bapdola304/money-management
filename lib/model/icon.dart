@@ -1,7 +1,7 @@
 class IconModel {
-  final String id;
+  final String? id;
   final String image;
-  IconModel({required this.image, required this.id});
+  IconModel({required this.image, this.id});
 
   factory IconModel.fromMap(Map<String, dynamic> map) {
     return IconModel(

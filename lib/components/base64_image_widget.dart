@@ -4,8 +4,9 @@ import 'dart:typed_data';
 
 class Base64ImageWidget extends StatelessWidget {
   final String? base64String;
+  final double? width;
 
-  Base64ImageWidget({this.base64String});
+  Base64ImageWidget({this.base64String, this.width});
 
   @override
   Widget build(BuildContext context) {
@@ -16,6 +17,6 @@ class Base64ImageWidget extends StatelessWidget {
     // Chuyển đổi base64 thành Uint8List
     Uint8List bytes = base64Decode(base64StringWithoutPrefix);
 
-    return Image.memory(bytes, width: 60);
+    return Image.memory(bytes, width: width);
   }
 }

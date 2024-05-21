@@ -26,4 +26,19 @@ class CategoryService {
     final response = await request.post(url, body);
     return response;
   }
+
+  Future<List<CategoryModel>> getCategoryList() async {
+    const url = '/category?select=*,icon(image)';
+    final response = await request.get(url);
+    if (response.statusCode == 200) {
+      final json = jsonDecode(response.body) as List;
+      return json
+          .map(
+            (icon) => CategoryModel.fromMap(icon),
+          )
+          .toList();
+    }
+    EasyLoading.showError('Có lỗi xảy ra!');
+    return [];
+  }
 }

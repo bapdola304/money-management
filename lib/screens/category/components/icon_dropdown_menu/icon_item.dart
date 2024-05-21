@@ -20,6 +20,6 @@ class DropDownIconItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Base64ImageWidget(base64String: icon?.image);
+    return Base64ImageWidget(base64String: icon?.image, width: 60);
   }
 }

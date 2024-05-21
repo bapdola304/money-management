@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:money_management/components/base64_image_widget.dart';
+import 'package:money_management/model/category.dart';
 
 class CategoryTabList extends StatelessWidget {
-  const CategoryTabList({Key? key, this.onActionsPressed, this.onItemClicked})
+  const CategoryTabList(
+      {Key? key,
+      this.onActionsPressed,
+      this.onItemClicked,
+      required this.categoryList})
       : super(key: key);
   final Function()? onActionsPressed;
   final Function()? onItemClicked;
+  final List<CategoryModel> categoryList;
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +19,7 @@ class CategoryTabList extends StatelessWidget {
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 3, childAspectRatio: 1.1, mainAxisSpacing: 15),
       shrinkWrap: true,
-      itemCount: 10,
+      itemCount: categoryList.length,
       itemBuilder: (context, index) => InkWell(
         onTap: onItemClicked,
         onLongPress: onActionsPressed,
@@ -39,14 +46,14 @@ class CategoryTabList extends StatelessWidget {
                     ),
                   ],
                 ),
-                child: Image.asset(
-                  'assets/icons/wallet.png',
-                  width: 50,
+                child: Base64ImageWidget(
+                  base64String: categoryList[index].icon?.image,
+                  width: 40,
                 ),
               ),
               const SizedBox(height: 10),
-              const Center(
-                child: Text('Trang phục',
+              Center(
+                child: Text(categoryList[index].name,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style:
