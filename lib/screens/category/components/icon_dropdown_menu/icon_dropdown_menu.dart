@@ -7,14 +7,10 @@ import 'package:mirai_dropdown_menu/mirai_dropdown_menu.dart';
 import 'package:provider/provider.dart';
 
 class IconDropdownMenu extends StatefulWidget {
-  final List<IconModel> icons;
   final Function(IconModel icon) onChanged;
   final ValueNotifier<IconModel> icon;
   const IconDropdownMenu(
-      {super.key,
-      required this.icons,
-      required this.onChanged,
-      required this.icon});
+      {super.key, required this.onChanged, required this.icon});
 
   @override
   State<IconDropdownMenu> createState() => _IconDropdownMenuState();

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:money_management/model/category.dart';
 import 'package:money_management/model/icon.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:money_management/services/category_service.dart';
@@ -16,5 +17,12 @@ class CategoryProvider extends ChangeNotifier {
     EasyLoading.dismiss();
     _icons = response;
     notifyListeners();
+  }
+
+  Future<dynamic> createCategory(CategoryModel body) async {
+    EasyLoading.show();
+    final response = await _service.createCategory(body);
+    EasyLoading.dismiss();
+    return response;
   }
 }

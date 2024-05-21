@@ -6,8 +6,14 @@ class TextFieldCustom extends StatelessWidget {
   final Image? icon;
   final TextEditingController? controller;
   final FocusNode? focusNode;
+  final String? Function(String?)? validator;
   const TextFieldCustom(
-      {super.key, this.hintText, this.icon, this.controller, this.focusNode});
+      {super.key,
+      this.hintText,
+      this.icon,
+      this.controller,
+      this.focusNode,
+      this.validator});
 
   @override
   Widget build(BuildContext context) {
@@ -30,10 +36,12 @@ class TextFieldCustom extends StatelessWidget {
             child: icon),
         const SizedBox(width: 8),
         Expanded(
-          child: TextField(
+          child: TextFormField(
             controller: controller,
             inputFormatters: [CapitalizeFirstWordOnlyInputFormatter()],
             focusNode: focusNode,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            validator: validator,
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
             decoration: InputDecoration(
                 enabledBorder: UnderlineInputBorder(

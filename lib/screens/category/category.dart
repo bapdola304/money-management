@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:money_management/components/button.dart';
+import 'package:money_management/components/show_toastification.dart';
 import 'package:money_management/components/text_field_custom.dart';
+import 'package:money_management/model/category.dart';
 import 'package:money_management/model/icon.dart';
+import 'package:money_management/provider/category_provider.dart';
 import 'package:money_management/screens/category/components/category_bottom_sheet.dart';
 import 'package:money_management/screens/category/components/category_list.dart';
 import 'package:money_management/screens/category/components/icon_dropdown_menu/icon_dropdown_menu.dart';
 import 'package:money_management/screens/category/components/search_input.dart';
+import 'package:provider/provider.dart';
+import 'package:wc_form_validators/wc_form_validators.dart';
 
 class Category extends StatefulWidget {
   const Category({Key? key}) : super(key: key);
@@ -18,7 +23,8 @@ class _CreateCategoryState extends State<Category> {
   bool isShowSearch = false;
   late ValueNotifier<IconModel> iconSelected =
       ValueNotifier(IconModel(id: '', image: ''));
-  final TextEditingController _desController = TextEditingController();
+  final TextEditingController _categoryNameController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -31,6 +37,25 @@ class _CreateCategoryState extends State<Category> {
         useRootNavigator: true,
         builder: (context) =>
             CategoryBottomSheet(onDeletePressed: () {}, onEditPressed: () {}));
+  }
+
+  handleCreateCategory() {
+    if (_formKey.currentState!.validate()) {
+      CategoryModel category = CategoryModel(
+        name: _categoryNameController.text,
+        iconId: iconSelected.value.id,
+      );
+      context
+          .read<CategoryProvider>()
+          .createCategory(category)
+          .then((response) {
+        if (response.statusCode == 201) {
+          showToastification('Thêm hạng mục thành công!', 'success', context);
+          Navigator.pop(context);
+          _formKey.currentState!.reset();
+        }
+      });
+    }
   }
 
   showDataAlert() {
@@ -62,7 +87,6 @@ class _CreateCategoryState extends State<Category> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     IconDropdownMenu(
-                      icons: [],
                       onChanged: (icon) {
                         setState(() {
                           iconSelected.value = icon;
@@ -71,19 +95,24 @@ class _CreateCategoryState extends State<Category> {
                       icon: iconSelected,
                     ),
                     const SizedBox(height: 20),
-                    TextFieldCustom(
-                      hintText: 'Tên hạng mục',
-                      controller: _desController,
-                      icon: Image.asset(
-                        'assets/icons/category.png',
-                        width: 40,
-                      ),
+                    Form(
+                      key: _formKey,
+                      child: TextFieldCustom(
+                          hintText: 'Tên hạng mục',
+                          controller: _categoryNameController,
+                          icon: Image.asset(
+                            'assets/icons/category.png',
+                            width: 40,
+                          ),
+                          validator: Validators.compose([
+                            Validators.required('Vui lòng nhập tên hạng mục')
+                          ])),
                     ),
                     const SizedBox(height: 20),
                     Button(
                       textButton: 'LƯU',
                       bgColor: Colors.green,
-                      onButtonPressed: () {},
+                      onButtonPressed: handleCreateCategory,
                     )
                   ],
                 ),
