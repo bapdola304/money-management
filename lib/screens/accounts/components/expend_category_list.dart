@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:money_management/components/base64_image_widget.dart';
 
 class ExpendCategoryList extends StatelessWidget {
   final Function()? onItemClicked;
-  const ExpendCategoryList({Key? key, this.onItemClicked}) : super(key: key);
-
+  const ExpendCategoryList(
+      {Key? key, this.onItemClicked, required this.expendListGroupByCategory})
+      : super(key: key);
+  final List<Map<String, dynamic>> expendListGroupByCategory;
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      itemCount: 2,
+      itemCount: expendListGroupByCategory.length,
       shrinkWrap: true,
       itemBuilder: (context, index) => Material(
         color: Colors.white,
@@ -19,8 +22,9 @@ class ExpendCategoryList extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Image.asset(
-                  'assets/icons/wallet.png',
+                Base64ImageWidget(
+                  base64String: expendListGroupByCategory[index]['category']
+                      ['icon']['image'],
                   width: 30,
                 ),
                 const SizedBox(width: 8),
@@ -33,7 +37,7 @@ class ExpendCategoryList extends StatelessWidget {
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  '5.000.000 đ',
+                  expendListGroupByCategory[index]['amount'].toString(),
                   style: TextStyle(fontSize: 18, color: Colors.red[400]),
                 )
               ],

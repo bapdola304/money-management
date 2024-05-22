@@ -1,15 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:money_management/provider/expend_provider.dart';
 import 'package:money_management/screens/accounts/components/expend_date_list.dart';
 import 'package:money_management/screens/create_expend/create_expend.dart';
+import 'package:money_management/utils/data_format.dart';
+import 'package:provider/provider.dart';
 
 class Expend extends StatefulWidget {
-  const Expend({Key? key}) : super(key: key);
-
+  const Expend({super.key, required this.accountId});
+  final String accountId;
   @override
   _ExpendState createState() => _ExpendState();
 }
 
 class _ExpendState extends State<Expend> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<ExpendProvider>().getAllExpend(widget.accountId);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,7 +75,12 @@ class _ExpendState extends State<Expend> {
                 ],
               ),
             ),
-            const Expanded(child: ExpendDateList())
+            Expanded(
+                child: Consumer<ExpendProvider>(
+                    builder: (context, expendProviderData, child) =>
+                        ExpendDateList(
+                            expendListGroupByDate: groupAndFormatByDate(
+                                expendProviderData.expendList))))
           ],
         ),
       ),

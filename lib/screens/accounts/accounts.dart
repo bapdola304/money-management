@@ -53,7 +53,7 @@ class _AccountsState extends State<Accounts> {
                       .setAccountIdSelected(accountId ?? "");
                   Navigator.of(context, rootNavigator: true)
                       .push(MaterialPageRoute(
-                    builder: (context) => Expend(),
+                    builder: (context) => Expend(accountId: accountId ?? ""),
                   ));
                 },
                 onActionsPressed: () => onActionsPressed(context));

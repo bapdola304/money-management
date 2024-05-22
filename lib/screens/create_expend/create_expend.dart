@@ -71,7 +71,7 @@ class _CreateExpendState extends State<CreateExpend> {
             '',
         amount: parseCurrency(_amountController.text),
         categoryId: categorySelected.value.id,
-        dateTime: selectedDate.toIso8601String(),
+        dateTime: selectedDate,
         description: _desController.text);
     context.read<ExpendProvider>().createExpend(expendRequest).then((response) {
       if (response.statusCode == 201) {

@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:money_management/screens/accounts/components/expend_category_list.dart';
 
 class ExpendDateList extends StatelessWidget {
-  const ExpendDateList({Key? key}) : super(key: key);
+  const ExpendDateList({Key? key, required this.expendListGroupByDate})
+      : super(key: key);
+  final List<Map<String, dynamic>> expendListGroupByDate;
 
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      itemCount: 2,
+      itemCount: expendListGroupByDate.length,
       shrinkWrap: true,
       itemBuilder: (context, index) => Container(
         margin: const EdgeInsets.only(top: 10),
@@ -30,25 +32,26 @@ class ExpendDateList extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Row(
+                          Row(
                             children: [
                               Text(
-                                '17',
-                                style: TextStyle(
+                                expendListGroupByDate[index]['date']['day'],
+                                style: const TextStyle(
                                     fontSize: 30, fontWeight: FontWeight.w600),
                               ),
-                              SizedBox(width: 16),
+                              const SizedBox(width: 16),
                               Column(
                                 children: [
-                                  Text(
+                                  const Text(
                                     'Hôm nay',
                                     style: TextStyle(
                                         fontSize: 18,
                                         fontWeight: FontWeight.w500),
                                   ),
                                   Text(
-                                    '05/2024',
-                                    style: TextStyle(
+                                    expendListGroupByDate[index]['date']
+                                        ['month_year'],
+                                    style: const TextStyle(
                                         fontSize: 16, color: Colors.black54),
                                   )
                                 ],
@@ -62,7 +65,7 @@ class ExpendDateList extends StatelessWidget {
                           )
                         ],
                       ),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       Container(
                         height: 1,
                         // width: 50,
@@ -78,6 +81,7 @@ class ExpendDateList extends StatelessWidget {
             ],
           ),
           ExpendCategoryList(
+            expendListGroupByCategory: expendListGroupByDate[index]['items'],
             onItemClicked: () {},
           )
         ]),

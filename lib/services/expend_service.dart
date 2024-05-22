@@ -5,14 +5,15 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class ExpendService {
   Request request = Request();
-  Future<List<ExpendModel>> getAll(String userId) async {
-    final url = '/expend?order=created_at.desc';
+  Future<List<ExpendModel>> getAll(String accountId) async {
+    final url =
+        '/expend?select=*,category(id, icon(image))&accountId=eq.$accountId&order=dateTime.desc';
     final response = await request.get(url);
     if (response.statusCode == 200) {
       final json = jsonDecode(response.body) as List;
       return json
           .map(
-            (user) => ExpendModel.fromMap(user),
+            (user) => ExpendModel.fromJson(user),
           )
           .toList();
     }
