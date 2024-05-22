@@ -51,7 +51,7 @@ class _CategoryDropdownMenuState extends State<CategoryDropdownMenu> {
             valueListenable: widget.category,
             builder: (_, CategoryModel categoryItem, __) {
               return TypeSelect(
-                  emptyText: 'Chọn danh mục',
+                  emptyText: 'Chọn hạng mục',
                   icon: Base64ImageWidget(
                     base64String: categoryItem.icon?.image,
                     width: 40,

@@ -20,7 +20,6 @@ class Request {
     final uri = Uri.parse(baseUrl + url);
     var response =
         await http.post(uri, headers: headers, body: json.encode(body));
-    debugPrint(response.toString());
     return response;
   }
 }

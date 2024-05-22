@@ -9,18 +9,22 @@ class AccountProvider extends ChangeNotifier {
   final _service = AccountService();
   List<Account> _accounts = [];
   List<Account> get accounts => _accounts;
+  String _accountIdSelected = '';
+  String? get accountIdSelected => _accountIdSelected;
+  Account _accountSelected = Account(accountName: '', id: '');
+  Account get accountSelected => _accountSelected;
 
   Future<void> getAllAccounts(String userId) async {
     EasyLoading.show();
-    try {
-      final response = await _service.getAll(userId);
-      EasyLoading.dismiss();
-      _accounts = response;
-      notifyListeners();
-    } catch (e) {
-      debugPrint(e.toString());
-      EasyLoading.dismiss();
+    final response = await _service.getAll(userId);
+    EasyLoading.dismiss();
+    debugPrint(_accountIdSelected.toString());
+    _accounts = response;
+    if (_accountIdSelected != '') {
+      _accountSelected =
+          _accounts.firstWhere((item) => item.id == _accountIdSelected);
     }
+    notifyListeners();
   }
 
   Future<dynamic> createAccount(Account body) async {
@@ -28,5 +32,10 @@ class AccountProvider extends ChangeNotifier {
     final response = await _service.createAccount(body);
     EasyLoading.dismiss();
     return response;
+  }
+
+  void setAccountIdSelected(String accountId) {
+    _accountIdSelected = accountId;
+    notifyListeners();
   }
 }

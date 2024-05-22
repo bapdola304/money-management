@@ -1,15 +1,15 @@
 class Account {
   final String? id;
   final String accountName;
-  final int accountBalance;
-  final String description;
-  final String userId;
+  final int? accountBalance;
+  final String? description;
+  final String? userId;
   Account({
     required this.accountName,
-    required this.accountBalance,
-    required this.description,
+    this.accountBalance,
+    this.description,
     this.id,
-    required this.userId,
+    this.userId,
   });
 
   factory Account.fromMap(Map<String, dynamic> map) {

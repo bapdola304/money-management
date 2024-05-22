@@ -43,19 +43,21 @@ class _AccountsState extends State<Accounts> {
         body: Container(
           color: const Color(0xFFefeff2),
           padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Expanded(
-            child: Consumer<AccountProvider>(
-                builder: (context, accountProviderData, child) {
-              return AccountList(
-                  accountList: accountProviderData.accounts,
-                  onItemClicked: () =>
-                      Navigator.of(context, rootNavigator: true)
-                          .push(MaterialPageRoute(
-                        builder: (context) => const Expend(),
-                      )),
-                  onActionsPressed: () => onActionsPressed(context));
-            }),
-          ),
+          child: Consumer<AccountProvider>(
+              builder: (context, accountProviderData, child) {
+            return AccountList(
+                accountList: accountProviderData.accounts,
+                onItemClicked: (accountId) {
+                  context
+                      .read<AccountProvider>()
+                      .setAccountIdSelected(accountId ?? "");
+                  Navigator.of(context, rootNavigator: true)
+                      .push(MaterialPageRoute(
+                    builder: (context) => Expend(),
+                  ));
+                },
+                onActionsPressed: () => onActionsPressed(context));
+          }),
         ),
         floatingActionButton: FloatingActionButton(
           heroTag: "btn1",

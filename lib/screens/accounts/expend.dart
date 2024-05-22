@@ -77,7 +77,7 @@ class _ExpendState extends State<Expend> {
         onPressed: () {
           Navigator.of(context, rootNavigator: true).push(
             MaterialPageRoute(
-              builder: (context) => const CreateExpend(),
+              builder: (context) => CreateExpend(),
             ),
           );
         },

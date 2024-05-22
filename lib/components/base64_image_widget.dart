@@ -10,8 +10,8 @@ class Base64ImageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (base64String == null)
-      return Image.asset('assets/icons/empty_icon.png', width: 40);
+    if (base64String == null || base64String == '')
+      return Image.asset('assets/icons/empty_icon.png', width: width);
     // Loại bỏ tiền tố "data:image/png;base64,"
     String base64StringWithoutPrefix = base64String!.split(',').last;
 

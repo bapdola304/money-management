@@ -18,7 +18,7 @@ class NavBar extends StatelessWidget {
       margin: EdgeInsets.only(
         left: 0,
         right: 0,
-        bottom: Platform.isAndroid ? 0 : 0,
+        bottom: 0,
       ),
       child: BottomAppBar(
         elevation: 0.0,
