@@ -11,13 +11,13 @@ class Base64ImageWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (base64String == null || base64String == '')
-      return Image.asset('assets/icons/empty_icon.png', width: width);
+      return Image.asset('assets/icons/empty_icon.png',
+          width: width, gaplessPlayback: true);
     // Loại bỏ tiền tố "data:image/png;base64,"
     String base64StringWithoutPrefix = base64String!.split(',').last;
 
     // Chuyển đổi base64 thành Uint8List
     Uint8List bytes = base64Decode(base64StringWithoutPrefix);
-
-    return Image.memory(bytes, width: width);
+    return Image.memory(bytes, width: width, gaplessPlayback: true);
   }
 }

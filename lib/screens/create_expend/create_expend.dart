@@ -81,11 +81,6 @@ class _CreateExpendState extends State<CreateExpend> {
     });
   }
 
-  List<CategoryModel> getFavoriteCategoryList(
-      List<CategoryModel> categoryList) {
-    return categoryList.where((item) => item.isFavorite == true).toList();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -115,68 +110,74 @@ class _CreateExpendState extends State<CreateExpend> {
               ))
         ],
       ),
-      body: Container(
-        color: const Color(0xFFefeff2),
-        child: Column(children: [
-          Container(
-            color: Colors.white,
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            child:
-                CurrencyInput(controller: _amountController, text: 'Số tiền'),
-          ),
-          Container(
-            color: Colors.white,
-            margin: const EdgeInsets.only(top: 10),
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Column(children: [
-              const SizedBox(height: 20),
-              CategoryDropdownMenu(
-                onChanged: (category) {
-                  setState(() {
-                    categorySelected.value = category;
-                  });
-                },
-                category: categorySelected,
-              ),
-              Consumer<CategoryProvider>(
-                  builder: (context, categoryProvider, child) => FavoriteList(
-                      categoryList: getFavoriteCategoryList(
-                          categoryProvider.categoryList))),
-              const SizedBox(height: 20),
-              TextFieldCustom(
-                hintText: 'Mô tả',
-                controller: _desController,
-                icon: Image.asset(
-                  'assets/icons/description.png',
-                  width: 35,
-                ),
-              ),
-              const SizedBox(height: 20),
-              InkWell(
-                onTap: () => _selectDate(context),
-                child: TypeSelect(
-                  icon: Image.asset('assets/icons/calendar.png', width: 35),
-                  text: (formatDateTime(selectedDate)),
-                ),
-              ),
-              const SizedBox(height: 20),
-              Consumer<AccountProvider>(
-                builder: (context, accountProvider, child) =>
-                    AccountDropdownMenu(
-                  onChanged: (account) {
+      body: SingleChildScrollView(
+        child: Container(
+          color: const Color(0xFFefeff2),
+          child: Column(children: [
+            Container(
+              color: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              child:
+                  CurrencyInput(controller: _amountController, text: 'Số tiền'),
+            ),
+            Container(
+              color: Colors.white,
+              margin: const EdgeInsets.only(top: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Column(children: [
+                const SizedBox(height: 20),
+                CategoryDropdownMenu(
+                  onChanged: (category) {
                     setState(() {
-                      accountSelected.value = account;
+                      categorySelected.value = category;
                     });
                   },
-                  account: accountSelected.value.accountName != ''
-                      ? accountSelected
-                      : ValueNotifier(accountProvider.accountSelected),
+                  category: categorySelected,
                 ),
-              ),
-              const SizedBox(height: 20),
-            ]),
-          )
-        ]),
+                FavoriteList(
+                  categorySelected: categorySelected.value,
+                  onItemClicked: (category) {
+                    setState(() {
+                      categorySelected.value = category;
+                    });
+                  },
+                ),
+                const SizedBox(height: 20),
+                TextFieldCustom(
+                  hintText: 'Mô tả',
+                  controller: _desController,
+                  icon: Image.asset(
+                    'assets/icons/description.png',
+                    width: 35,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                InkWell(
+                  onTap: () => _selectDate(context),
+                  child: TypeSelect(
+                    icon: Image.asset('assets/icons/calendar.png', width: 35),
+                    text: (formatDateTime(selectedDate)),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Consumer<AccountProvider>(
+                  builder: (context, accountProvider, child) =>
+                      AccountDropdownMenu(
+                    onChanged: (account) {
+                      setState(() {
+                        accountSelected.value = account;
+                      });
+                    },
+                    account: accountSelected.value.accountName != ''
+                        ? accountSelected
+                        : ValueNotifier(accountProvider.accountSelected),
+                  ),
+                ),
+                const SizedBox(height: 20),
+              ]),
+            )
+          ]),
+        ),
       ),
       bottomNavigationBar: BottomAppBar(
           surfaceTintColor: Colors.transparent,
