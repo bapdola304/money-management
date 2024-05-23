@@ -9,6 +9,7 @@ import 'package:money_management/screens/category/components/category_bottom_she
 import 'package:money_management/screens/category/components/category_list.dart';
 import 'package:money_management/screens/category/components/icon_dropdown_menu/icon_dropdown_menu.dart';
 import 'package:money_management/screens/category/components/search_input.dart';
+import 'package:money_management/utils/enum.dart';
 import 'package:provider/provider.dart';
 import 'package:wc_form_validators/wc_form_validators.dart';
 
@@ -19,14 +20,14 @@ class Category extends StatefulWidget {
   _CreateCategoryState createState() => _CreateCategoryState();
 }
 
-class _CreateCategoryState extends State<Category> {
+class _CreateCategoryState extends State<Category>
+    with SingleTickerProviderStateMixin {
   bool isShowSearch = false;
   late ValueNotifier<IconModel> iconSelected =
       ValueNotifier(IconModel(id: '', image: ''));
   final TextEditingController _categoryNameController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-
-  @override
+  late TabController _tabController = TabController(length: 2, vsync: this);
   void initState() {
     super.initState();
     context.read<CategoryProvider>().getCategoryList();
@@ -42,9 +43,11 @@ class _CreateCategoryState extends State<Category> {
 
   handleCreateCategory() {
     if (_formKey.currentState!.validate()) {
-      CategoryModel category = CategoryModel(
+      CategoryRequestModel category = CategoryRequestModel(
         name: _categoryNameController.text,
         iconId: iconSelected.value.id ?? "",
+        transactionType:
+            TransactionType.fromIndex(_tabController.index).toString(),
       );
       context
           .read<CategoryProvider>()
@@ -76,7 +79,7 @@ class _CreateCategoryState extends State<Category> {
               top: 10.0,
             ),
             title: const Text(
-              "Thêm hạng mục chi tiêu",
+              'Thêm hạng mục',
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
             content: Container(
@@ -124,6 +127,13 @@ class _CreateCategoryState extends State<Category> {
         });
   }
 
+  List<CategoryModel> filterCategoryList(
+      List<CategoryModel> categoryList, String type) {
+    return categoryList
+        .where((category) => category.transactionType == type)
+        .toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -143,27 +153,70 @@ class _CreateCategoryState extends State<Category> {
         ),
         centerTitle: true,
       ),
-      body: Container(
-        color: const Color(0xFFefeff2),
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Column(
-          children: [
-            isShowSearch ? const SizedBox(height: 20) : Container(),
-            isShowSearch
-                ? SearchInput(
-                    onChanged: (text) {},
+      body: DefaultTabController(
+        length: 2,
+        child: Container(
+          color: const Color(0xFFefeff2),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Column(
+            children: [
+              isShowSearch ? const SizedBox(height: 20) : Container(),
+              isShowSearch
+                  ? SearchInput(
+                      onChanged: (text) {},
+                    )
+                  : Container(),
+              const SizedBox(height: 10),
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: TabBar(
+                  controller: _tabController,
+                  padding: const EdgeInsets.only(bottom: 0),
+                  indicatorColor: Colors.green,
+                  dividerColor: Colors.transparent,
+                  labelColor: Colors.green,
+                  labelPadding: EdgeInsets.zero,
+                  unselectedLabelColor: Colors.black,
+                  unselectedLabelStyle:
+                      const TextStyle(fontWeight: FontWeight.normal),
+                  labelStyle: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.w700),
+                  tabs: const [
+                    Tab(text: 'CHI TIỀN'),
+                    Tab(text: 'THU TIỀN'),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 20),
+              Expanded(
+                  child: TabBarView(
+                controller: _tabController,
+                children: [
+                  Consumer<CategoryProvider>(
+                    builder: (context, categoryProviderData, child) =>
+                        CategoryTabList(
+                            categoryList: filterCategoryList(
+                                categoryProviderData.categoryList,
+                                TransactionType.expense.toString()),
+                            onItemClicked: () {},
+                            onActionsPressed: () => onActionsPressed(context)),
+                  ),
+                  Consumer<CategoryProvider>(
+                    builder: (context, categoryProviderData, child) =>
+                        CategoryTabList(
+                            categoryList: filterCategoryList(
+                                categoryProviderData.categoryList,
+                                TransactionType.income.toString()),
+                            onItemClicked: () {},
+                            onActionsPressed: () => onActionsPressed(context)),
                   )
-                : Container(),
-            const SizedBox(height: 10),
-            Expanded(
-                child: Consumer<CategoryProvider>(
-              builder: (context, categoryProviderData, child) =>
-                  CategoryTabList(
-                      categoryList: categoryProviderData.categoryList,
-                      onItemClicked: () {},
-                      onActionsPressed: () => onActionsPressed(context)),
-            ))
-          ],
+                ],
+              ))
+            ],
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(

@@ -6,12 +6,15 @@ class CategoryModel {
   final String iconId;
   final bool? isFavorite;
   final IconModel? icon;
+  final String? transactionType;
+
   CategoryModel(
       {required this.name,
       required this.iconId,
       this.isFavorite,
       this.id,
-      this.icon});
+      this.icon,
+      this.transactionType});
 
   factory CategoryModel.fromMap(Map<String, dynamic> map) {
     return CategoryModel(
@@ -20,6 +23,7 @@ class CategoryModel {
       iconId: map['iconId'] != null ? map['iconId'] : "",
       isFavorite: map['name'] != null ? map['isFavorite'] : false,
       icon: map['icon'] != null ? IconModel.fromMap(map['icon']) : null,
+      transactionType: map['transactionType'] ?? "",
     );
   }
 
@@ -28,7 +32,32 @@ class CategoryModel {
       'name': name,
       'iconId': iconId,
       'isFavorite': isFavorite,
-      'icon': icon?.toJson()
+      'icon': icon?.toJson(),
+      'transactionType': transactionType
+    };
+  }
+}
+
+class CategoryRequestModel {
+  final String? id;
+  final String? name;
+  final String iconId;
+  final bool? isFavorite;
+  final String? transactionType;
+
+  CategoryRequestModel(
+      {required this.name,
+      required this.iconId,
+      this.isFavorite,
+      this.id,
+      this.transactionType});
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'iconId': iconId,
+      'isFavorite': isFavorite,
+      'transactionType': transactionType
     };
   }
 }

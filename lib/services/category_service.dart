@@ -21,10 +21,18 @@ class CategoryService {
     return [];
   }
 
-  Future<dynamic> createCategory(CategoryModel body) async {
+  Future<dynamic> createCategory(CategoryRequestModel body) async {
     const url = '/category';
     final response = await request.post(url, body);
-    return response;
+    if (response.statusCode == 201) {
+      return response;
+    }
+    final json = jsonDecode(response.body);
+    EasyLoading.showError('Có lỗi xảy ra: ${json['message']}',
+        maskType: EasyLoadingMaskType.clear,
+        dismissOnTap: true,
+        duration: const Duration(seconds: 5));
+    return null;
   }
 
   Future<List<CategoryModel>> getCategoryList() async {

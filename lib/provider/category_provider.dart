@@ -21,7 +21,7 @@ class CategoryProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<dynamic> createCategory(CategoryModel body) async {
+  Future<dynamic> createCategory(CategoryRequestModel body) async {
     EasyLoading.show();
     final response = await _service.createCategory(body);
     EasyLoading.dismiss();
