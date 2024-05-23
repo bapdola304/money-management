@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:money_management/components/currency_input.dart';
 import 'package:money_management/components/text_field_custom.dart';
+import 'package:money_management/data/data.dart';
 import 'package:money_management/model/account.dart';
 import 'package:money_management/model/category.dart';
 import 'package:money_management/model/expend.dart';
 import 'package:money_management/provider/account_provider.dart';
-import 'package:money_management/provider/category_provider.dart';
 import 'package:money_management/provider/expend_provider.dart';
 import 'package:money_management/screens/accounts/components/TypeSelect.dart';
 import 'package:money_management/screens/create_expend/components/account_dropdown_menu/account_dropdown_menu.dart';
 import 'package:money_management/screens/create_expend/components/favorite_list.dart';
+import 'package:money_management/screens/create_expend/components/transaction_type_dropdown_menu/transaction_type_dropdown_menu.dart';
 import 'package:money_management/utils/currence_format.dart';
 import 'package:provider/provider.dart';
 import 'components/category_dropdown_menu/category_dropdown_menu.dart';
@@ -36,6 +37,8 @@ class _CreateExpendState extends State<CreateExpend> {
       userId: null,
       accountBalance: null,
       description: null));
+  ValueNotifier<TransactionTypeSelect> transactionTypeSelected =
+      ValueNotifier(transactionTypeList[0]);
   DateTime selectedDate = DateTime.now();
 
   @override
@@ -96,11 +99,13 @@ class _CreateExpendState extends State<CreateExpend> {
               Icons.arrow_back_ios_rounded,
               color: Colors.white,
             )),
-        title: const Text(
-          'Chi tiền',
-          style: TextStyle(
-              color: Colors.white, fontWeight: FontWeight.w600, fontSize: 18),
-        ),
+        title: TransactionTypeDropdownMenu(
+            onChanged: (trans) {
+              setState(() {
+                transactionTypeSelected.value = trans;
+              });
+            },
+            transactionTypeSelected: transactionTypeSelected),
         centerTitle: true,
         actions: [
           IconButton(
@@ -138,6 +143,7 @@ class _CreateExpendState extends State<CreateExpend> {
                 ),
                 FavoriteList(
                   categorySelected: categorySelected.value,
+                  transactionTypeSelect: transactionTypeSelected.value,
                   onItemClicked: (category) {
                     setState(() {
                       categorySelected.value = category;

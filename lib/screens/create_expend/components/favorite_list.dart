@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:money_management/components/base64_image_widget.dart';
+import 'package:money_management/data/data.dart';
 import 'package:money_management/model/category.dart';
 import 'package:money_management/provider/category_provider.dart';
 import 'package:provider/provider.dart';
 
 class FavoriteList extends StatefulWidget {
   const FavoriteList(
-      {Key? key, this.onItemClicked, required this.categorySelected})
+      {Key? key,
+      this.onItemClicked,
+      required this.categorySelected,
+      this.transactionTypeSelect})
       : super(key: key);
   final Function(CategoryModel category)? onItemClicked;
   final CategoryModel categorySelected;
+  final TransactionTypeSelect? transactionTypeSelect;
   @override
   State<FavoriteList> createState() => _FavoriteListState();
 }
@@ -17,7 +22,11 @@ class FavoriteList extends StatefulWidget {
 class _FavoriteListState extends State<FavoriteList> {
   List<CategoryModel> getFavoriteCategoryList(
       List<CategoryModel> categoryList) {
-    return categoryList.where((item) => item.isFavorite == true).toList();
+    return categoryList
+        .where((item) =>
+            item.isFavorite == true &&
+            item.transactionType == widget.transactionTypeSelect!.value)
+        .toList();
   }
 
   @override
@@ -80,11 +89,14 @@ class _FavoriteListState extends State<FavoriteList> {
                     ),
                     const SizedBox(height: 5),
                     Center(
-                      child: Text(categoryFavoriteList[index].name ?? "",
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                              fontSize: 12, fontWeight: FontWeight.w400)),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                        child: Text(categoryFavoriteList[index].name ?? "",
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                                fontSize: 12, fontWeight: FontWeight.w400)),
+                      ),
                     ),
                   ],
                 ),
