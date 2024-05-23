@@ -2,23 +2,18 @@ import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'package:money_management/model/expend.dart';
 
-// Hàm tổng hợp để nhóm và định dạng các đối tượng theo ngày
 List<Map<String, dynamic>> groupAndFormatByDate(List<ExpendModel> dataList) {
-  // Bước 2: Nhóm các đối tượng theo ngày
   Map<String, List<ExpendModel>> groupedByDate = {};
 
+  // Nhóm các mục theo ngày
   for (var item in dataList) {
-    // Bỏ qua nếu dateTime là null
     if (item.dateTime == null) continue;
 
-    // Định dạng ngày
     String day = DateFormat('dd').format(item.dateTime!);
     String monthYear = DateFormat('MM/yyyy').format(item.dateTime!);
 
-    // Tạo khóa ngày với định dạng yêu cầu
     String dateKey = '{"day": "$day", "month_year": "$monthYear"}';
 
-    // Nhóm các đối tượng theo ngày đã định dạng
     if (groupedByDate.containsKey(dateKey)) {
       groupedByDate[dateKey]!.add(item);
     } else {
@@ -26,11 +21,20 @@ List<Map<String, dynamic>> groupAndFormatByDate(List<ExpendModel> dataList) {
     }
   }
 
-  // Bước 3: Chuyển đổi Map thành danh sách các đối tượng chứa ngày và danh sách các đối tượng có cùng ngày
+  // Tạo danh sách kết quả cuối cùng với tổng amount cho từng ngày
   List<Map<String, dynamic>> groupedData = groupedByDate.entries.map((entry) {
+    Map<String, dynamic> dateKey = jsonDecode(entry.key);
+    List<Map<String, dynamic>> items =
+        entry.value.map((item) => item.toJson()).toList();
+
+    // Tính tổng amount cho các mục trong cùng một ngày
+    int totalAmount =
+        entry.value.fold(0, (sum, item) => sum + (item.amount ?? 0));
+
     return {
-      'date': jsonDecode(entry.key),
-      'items': entry.value.map((item) => item.toJson()).toList(),
+      'date': dateKey,
+      'items': items,
+      'totalAmount': totalAmount,
     };
   }).toList();
 

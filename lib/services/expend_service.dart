@@ -7,13 +7,13 @@ class ExpendService {
   Request request = Request();
   Future<List<ExpendModel>> getAll(String accountId) async {
     final url =
-        '/expend?select=*,category(id, icon(image))&accountId=eq.$accountId&order=dateTime.desc';
+        '/expend?select=*,category(id,name, icon(image))&accountId=eq.$accountId&order=dateTime.desc';
     final response = await request.get(url);
     if (response.statusCode == 200) {
       final json = jsonDecode(response.body) as List;
       return json
           .map(
-            (user) => ExpendModel.fromJson(user),
+            (expend) => ExpendModel.fromJson(expend),
           )
           .toList();
     }
@@ -24,7 +24,7 @@ class ExpendService {
     return [];
   }
 
-  Future<dynamic> createExpend(ExpendModel body) async {
+  Future<dynamic> createExpend(ExpendRequestModel body) async {
     const url = '/expend';
     final response = await request.post(url, body);
     if (response.statusCode == 201) {

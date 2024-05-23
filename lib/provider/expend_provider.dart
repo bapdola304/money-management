@@ -19,7 +19,7 @@ class ExpendProvider extends ChangeNotifier {
     return response;
   }
 
-  Future<dynamic> createExpend(ExpendModel body) async {
+  Future<dynamic> createExpend(ExpendRequestModel body) async {
     EasyLoading.show();
     final response = await _service.createExpend(body);
     EasyLoading.dismiss();

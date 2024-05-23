@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:money_management/components/loading.dart';
 import 'package:money_management/provider/account_provider.dart';
 import 'package:money_management/provider/category_provider.dart';
@@ -15,6 +16,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await setupServiceLocator();
+  await initializeDateFormatting('vi_VN', '');
   runApp(MyApp());
   configLoading();
 }

@@ -65,10 +65,11 @@ class _CreateExpendState extends State<CreateExpend> {
       showToastification('Vui lòng chọn hạng mục!', 'warning', context);
       return;
     }
-    ExpendModel expendRequest = ExpendModel(
-        accountId: accountSelected.value.id ??
-            context.read<AccountProvider>().accountSelected.id ??
-            '',
+    String accountId = accountSelected.value.id ??
+        context.read<AccountProvider>().accountSelected.id ??
+        '';
+    ExpendRequestModel expendRequest = ExpendRequestModel(
+        accountId: accountId,
         amount: parseCurrency(_amountController.text),
         categoryId: categorySelected.value.id,
         dateTime: selectedDate,
@@ -76,6 +77,7 @@ class _CreateExpendState extends State<CreateExpend> {
     context.read<ExpendProvider>().createExpend(expendRequest).then((response) {
       if (response.statusCode == 201) {
         showToastification('Ghi chi tiêu thành công!', 'success', context);
+        context.read<ExpendProvider>().getAllExpend(accountId);
         Navigator.pop(context);
       }
     });

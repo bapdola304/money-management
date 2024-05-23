@@ -9,4 +9,7 @@ class IconModel {
       image: map['image'],
     );
   }
+  Map<String, dynamic> toJson() {
+    return {'name': id, 'image': image};
+  }
 }

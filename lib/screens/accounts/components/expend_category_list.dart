@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:money_management/components/base64_image_widget.dart';
+import 'package:money_management/utils/currence_format.dart';
 
 class ExpendCategoryList extends StatelessWidget {
   final Function()? onItemClicked;
@@ -10,6 +11,7 @@ class ExpendCategoryList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
+      physics: NeverScrollableScrollPhysics(),
       itemCount: expendListGroupByCategory.length,
       shrinkWrap: true,
       itemBuilder: (context, index) => Material(
@@ -22,14 +24,29 @@ class ExpendCategoryList extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Base64ImageWidget(
-                  base64String: expendListGroupByCategory[index]['category']
-                      ['icon']['image'],
-                  width: 30,
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.black54,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 2,
+                        blurRadius: 4,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Base64ImageWidget(
+                    base64String: expendListGroupByCategory[index]['category']
+                        ['icon']['image'],
+                    width: 25,
+                  ),
                 ),
                 const SizedBox(width: 8),
-                const Expanded(
-                  child: Text('Dịch vụ sinh hoạt',
+                Expanded(
+                  child: Text(
+                      expendListGroupByCategory[index]['category']['name'],
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style:
@@ -37,7 +54,8 @@ class ExpendCategoryList extends StatelessWidget {
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  expendListGroupByCategory[index]['amount'].toString(),
+                  formatCurrency(
+                      expendListGroupByCategory[index]['amount'], true),
                   style: TextStyle(fontSize: 18, color: Colors.red[400]),
                 )
               ],

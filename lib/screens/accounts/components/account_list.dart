@@ -4,7 +4,7 @@ import 'package:money_management/utils/currence_format.dart';
 
 class AccountList extends StatelessWidget {
   final Function()? onActionsPressed;
-  final Function(String? accountId)? onItemClicked;
+  final Function(String? accountId, String? accountName)? onItemClicked;
   final List<Account> accountList;
   const AccountList(
       {super.key,
@@ -22,7 +22,8 @@ class AccountList extends StatelessWidget {
     return ListView.builder(
       itemCount: accountList.length,
       itemBuilder: (context, index) => InkWell(
-        onTap: () => onItemClicked!(accountList[index].id),
+        onTap: () => onItemClicked!(
+            accountList[index].id, accountList[index].accountName),
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 8),
           margin: const EdgeInsets.only(top: 10),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:money_management/components/empty_data.dart';
 import 'package:money_management/provider/account_provider.dart';
 import 'package:money_management/screens/accounts/components/account_bottom_sheet.dart';
 import 'package:money_management/screens/accounts/components/account_list.dart';
@@ -6,6 +7,7 @@ import 'package:money_management/screens/accounts/create_account.dart';
 import 'package:money_management/screens/accounts/expend.dart';
 import 'package:money_management/storage/locator.dart';
 import 'package:money_management/storage/user_storage.dart';
+import 'package:money_management/utils/data_utils.dart';
 import 'package:provider/provider.dart';
 
 class Accounts extends StatefulWidget {
@@ -22,6 +24,31 @@ class _AccountsState extends State<Accounts> {
     super.initState();
     final userId = sharedPrefService.getUserId() ?? "";
     context.read<AccountProvider>().getAllAccounts(userId);
+  }
+
+  onActionsPressed(BuildContext context) {
+    showModalBottomSheet(
+        context: context,
+        useRootNavigator: true,
+        builder: (context) =>
+            AccountBottomSheet(onDeletePressed: () {}, onEditPressed: () {}));
+  }
+
+  renderAccountList(AccountProvider accountProviderData) {
+    return isEmptyData(accountProviderData.accounts)
+        ? const EmptyData()
+        : AccountList(
+            accountList: accountProviderData.accounts,
+            onItemClicked: (accountId, accountName) {
+              context
+                  .read<AccountProvider>()
+                  .setAccountIdSelected(accountId ?? "");
+              Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
+                builder: (context) => Expend(
+                    accountId: accountId ?? "", accountName: accountName ?? ""),
+              ));
+            },
+            onActionsPressed: () => onActionsPressed(context));
   }
 
   @override
@@ -41,24 +68,11 @@ class _AccountsState extends State<Accounts> {
           centerTitle: true,
         ),
         body: Container(
-          color: const Color(0xFFefeff2),
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Consumer<AccountProvider>(
-              builder: (context, accountProviderData, child) {
-            return AccountList(
-                accountList: accountProviderData.accounts,
-                onItemClicked: (accountId) {
-                  context
-                      .read<AccountProvider>()
-                      .setAccountIdSelected(accountId ?? "");
-                  Navigator.of(context, rootNavigator: true)
-                      .push(MaterialPageRoute(
-                    builder: (context) => Expend(accountId: accountId ?? ""),
-                  ));
-                },
-                onActionsPressed: () => onActionsPressed(context));
-          }),
-        ),
+            color: const Color(0xFFefeff2),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Consumer<AccountProvider>(
+                builder: (context, accountProviderData, child) =>
+                    renderAccountList(accountProviderData))),
         floatingActionButton: FloatingActionButton(
           heroTag: "btn1",
           backgroundColor: Colors.green,
@@ -81,13 +95,5 @@ class _AccountsState extends State<Accounts> {
         ),
       ),
     );
-  }
-
-  onActionsPressed(BuildContext context) {
-    showModalBottomSheet(
-        context: context,
-        useRootNavigator: true,
-        builder: (context) =>
-            AccountBottomSheet(onDeletePressed: () {}, onEditPressed: () {}));
   }
 }

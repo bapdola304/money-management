@@ -53,7 +53,7 @@ class CategoryTabList extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               Center(
-                child: Text(categoryList[index].name,
+                child: Text(categoryList[index].name ?? "",
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style:

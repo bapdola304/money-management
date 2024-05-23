@@ -80,7 +80,7 @@ class _FavoriteListState extends State<FavoriteList> {
                     ),
                     const SizedBox(height: 5),
                     Center(
-                      child: Text(categoryFavoriteList[index].name,
+                      child: Text(categoryFavoriteList[index].name ?? "",
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(

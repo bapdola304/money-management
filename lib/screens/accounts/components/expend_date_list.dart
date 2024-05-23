@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:money_management/screens/accounts/components/expend_category_list.dart';
+import 'package:money_management/utils/currence_format.dart';
+import 'package:money_management/utils/date_format.dart';
 
 class ExpendDateList extends StatelessWidget {
   const ExpendDateList({Key? key, required this.expendListGroupByDate})
@@ -42,9 +44,10 @@ class ExpendDateList extends StatelessWidget {
                               const SizedBox(width: 16),
                               Column(
                                 children: [
-                                  const Text(
-                                    'Hôm nay',
-                                    style: TextStyle(
+                                  Text(
+                                    displayDate(
+                                        expendListGroupByDate[index]['date']),
+                                    style: const TextStyle(
                                         fontSize: 18,
                                         fontWeight: FontWeight.w500),
                                   ),
@@ -59,7 +62,9 @@ class ExpendDateList extends StatelessWidget {
                             ],
                           ),
                           Text(
-                            '5.000.000 đ',
+                            formatCurrency(
+                                expendListGroupByDate[index]['totalAmount'],
+                                true),
                             style:
                                 TextStyle(fontSize: 20, color: Colors.red[400]),
                           )
