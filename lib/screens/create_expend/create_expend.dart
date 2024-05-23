@@ -12,6 +12,8 @@ import 'package:money_management/screens/create_expend/components/account_dropdo
 import 'package:money_management/screens/create_expend/components/favorite_list.dart';
 import 'package:money_management/screens/create_expend/components/transaction_type_dropdown_menu/transaction_type_dropdown_menu.dart';
 import 'package:money_management/utils/currence_format.dart';
+import 'package:money_management/utils/data_utils.dart';
+import 'package:money_management/utils/enum.dart';
 import 'package:provider/provider.dart';
 import 'components/category_dropdown_menu/category_dropdown_menu.dart';
 import 'package:money_management/utils/date_format.dart';
@@ -31,12 +33,9 @@ class _CreateExpendState extends State<CreateExpend> {
   var focusNode = FocusNode();
   ValueNotifier<CategoryModel> categorySelected =
       ValueNotifier(CategoryModel(name: '', iconId: ''));
-  ValueNotifier<Account> accountSelected = ValueNotifier(Account(
-      accountName: "",
-      id: null,
-      userId: null,
-      accountBalance: null,
-      description: null));
+  CategoryModel emptyCategoryData = CategoryModel(name: '', iconId: '');
+  ValueNotifier<Account> accountSelected = ValueNotifier(
+      Account(accountName: "", id: null, userId: null, accountBalance: null));
   ValueNotifier<TransactionTypeSelect> transactionTypeSelected =
       ValueNotifier(transactionTypeList[0]);
   DateTime selectedDate = DateTime.now();
@@ -76,6 +75,7 @@ class _CreateExpendState extends State<CreateExpend> {
         amount: parseCurrency(_amountController.text),
         categoryId: categorySelected.value.id,
         dateTime: selectedDate,
+        transactionType: transactionTypeSelected.value.value,
         description: _desController.text);
     context.read<ExpendProvider>().createExpend(expendRequest).then((response) {
       if (response.statusCode == 201) {
@@ -84,6 +84,15 @@ class _CreateExpendState extends State<CreateExpend> {
         Navigator.pop(context);
       }
     });
+  }
+
+  ValueNotifier<Account> getAccountSelected(AccountProvider accountProvider) {
+    if (!isEmptyData(accountSelected.value.accountName)) {
+      return accountSelected;
+    }
+    return isEmptyData(accountProvider.accountSelected.accountName)
+        ? ValueNotifier(accountProvider.accounts[0])
+        : ValueNotifier(accountProvider.accountSelected);
   }
 
   @override
@@ -103,6 +112,7 @@ class _CreateExpendState extends State<CreateExpend> {
             onChanged: (trans) {
               setState(() {
                 transactionTypeSelected.value = trans;
+                categorySelected.value = emptyCategoryData;
               });
             },
             transactionTypeSelected: transactionTypeSelected),
@@ -124,8 +134,13 @@ class _CreateExpendState extends State<CreateExpend> {
             Container(
               color: Colors.white,
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              child:
-                  CurrencyInput(controller: _amountController, text: 'Số tiền'),
+              child: CurrencyInput(
+                  controller: _amountController,
+                  text: 'Số tiền',
+                  numberColor: transactionTypeSelected.value.value ==
+                          TransactionType.income.value
+                      ? Colors.green
+                      : Colors.red),
             ),
             Container(
               color: Colors.white,
@@ -140,6 +155,7 @@ class _CreateExpendState extends State<CreateExpend> {
                     });
                   },
                   category: categorySelected,
+                  transactionTypeSelect: transactionTypeSelected.value,
                 ),
                 FavoriteList(
                   categorySelected: categorySelected.value,
@@ -176,9 +192,7 @@ class _CreateExpendState extends State<CreateExpend> {
                         accountSelected.value = account;
                       });
                     },
-                    account: accountSelected.value.accountName != ''
-                        ? accountSelected
-                        : ValueNotifier(accountProvider.accountSelected),
+                    account: getAccountSelected(accountProvider),
                   ),
                 ),
                 const SizedBox(height: 20),

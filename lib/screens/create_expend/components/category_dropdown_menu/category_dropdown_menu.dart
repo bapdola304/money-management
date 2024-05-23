@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:money_management/components/base64_image_widget.dart';
+import 'package:money_management/data/data.dart';
 import 'package:money_management/model/category.dart';
 import 'package:money_management/provider/category_provider.dart';
 import 'package:money_management/screens/accounts/components/TypeSelect.dart';
@@ -11,7 +12,11 @@ class CategoryDropdownMenu extends StatefulWidget {
   final Function(CategoryModel category) onChanged;
   final ValueNotifier<CategoryModel> category;
   const CategoryDropdownMenu(
-      {super.key, required this.onChanged, required this.category});
+      {super.key,
+      required this.onChanged,
+      required this.category,
+      this.transactionTypeSelect});
+  final TransactionTypeSelect? transactionTypeSelect;
 
   @override
   State<CategoryDropdownMenu> createState() => _CategoryDropdownMenuState();
@@ -24,13 +29,22 @@ class _CategoryDropdownMenuState extends State<CategoryDropdownMenu> {
     context.read<CategoryProvider>().getCategoryList();
   }
 
+  List<CategoryModel> getCategoryListByTransactionType(
+      List<CategoryModel> categoryList) {
+    return categoryList
+        .where((item) =>
+            item.transactionType == widget.transactionTypeSelect!.value)
+        .toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<CategoryProvider>(
       builder: (context, categoryProvider, child) =>
           MiraiDropDownMenu<CategoryModel>(
         key: UniqueKey(),
-        children: categoryProvider.categoryList,
+        children:
+            getCategoryListByTransactionType(categoryProvider.categoryList),
         valueNotifier: widget.category,
         // showSearchTextField: true,
         selectedItemBackgroundColor: Colors.green,

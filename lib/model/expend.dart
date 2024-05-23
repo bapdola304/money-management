@@ -9,6 +9,7 @@ class ExpendModel {
   final String? categoryId;
   final DateTime? dateTime;
   final CategoryModel? category;
+  final String? transactionType;
 
   ExpendModel(
       {required this.accountId,
@@ -17,22 +18,23 @@ class ExpendModel {
       this.id,
       this.categoryId,
       this.dateTime,
+      this.transactionType,
       this.category});
 
   // Phương thức để chuyển đổi từ JSON thành đối tượng ExpendModel
   factory ExpendModel.fromJson(Map<String, dynamic> json) {
     return ExpendModel(
-      accountId: json['accountId'],
-      amount: json['amount'],
-      description: json['description'],
-      id: json['id'],
-      categoryId: json['categoryId'],
-      category: json['category'] != null
-          ? CategoryModel.fromMap(json['category'])
-          : null,
-      dateTime:
-          json['dateTime'] != null ? DateTime.parse(json['dateTime']) : null,
-    );
+        accountId: json['accountId'],
+        amount: json['amount'],
+        description: json['description'],
+        id: json['id'],
+        categoryId: json['categoryId'],
+        category: json['category'] != null
+            ? CategoryModel.fromMap(json['category'])
+            : null,
+        dateTime:
+            json['dateTime'] != null ? DateTime.parse(json['dateTime']) : null,
+        transactionType: json['transactionType']);
   }
 
   // Phương thức để chuyển đổi từ đối tượng ExpendModel thành JSON
@@ -45,6 +47,7 @@ class ExpendModel {
       'categoryId': categoryId,
       'dateTime': dateTime?.toIso8601String(),
       'category': category?.toJson(),
+      'transactionType': transactionType
     };
   }
 }
@@ -55,14 +58,15 @@ class ExpendRequestModel {
   final String? description;
   final String? categoryId;
   final DateTime? dateTime;
+  final String? transactionType;
 
-  ExpendRequestModel({
-    required this.accountId,
-    this.amount,
-    this.description,
-    this.categoryId,
-    this.dateTime,
-  });
+  ExpendRequestModel(
+      {required this.accountId,
+      this.amount,
+      this.description,
+      this.categoryId,
+      this.dateTime,
+      this.transactionType});
 
   Map<String, dynamic> toJson() {
     return {
@@ -71,6 +75,7 @@ class ExpendRequestModel {
       'description': description,
       'categoryId': categoryId,
       'dateTime': dateTime?.toIso8601String(),
+      'transactionType': transactionType
     };
   }
 }

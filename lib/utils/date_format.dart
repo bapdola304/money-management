@@ -15,11 +15,15 @@ String displayDate(dynamic date) {
   DateTime now = DateTime.now();
   DateTime dateTime = _parseDateTime(date);
 
-  if (dateTime.isAtSameMomentAs(now)) {
+  DateTime nowDateOnly = DateTime(now.year, now.month, now.day);
+  DateTime dateTimeDateOnly =
+      DateTime(dateTime.year, dateTime.month, dateTime.day);
+
+  if (dateTimeDateOnly.isAtSameMomentAs(nowDateOnly)) {
     return "Hôm nay";
-  } else if (_isYesterday(dateTime, now)) {
+  } else if (_isYesterday(dateTimeDateOnly, nowDateOnly)) {
     return "Hôm qua";
-  } else if (_isTomorrow(dateTime, now)) {
+  } else if (_isTomorrow(dateTimeDateOnly, nowDateOnly)) {
     return "Ngày mai";
   } else {
     return DateFormat('EEEE', 'vi_VN').format(dateTime);

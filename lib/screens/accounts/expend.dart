@@ -45,7 +45,7 @@ class _ExpendState extends State<Expend> {
             )),
         title: Text(
           widget.accountName,
-          style: TextStyle(
+          style: const TextStyle(
               color: Colors.white, fontWeight: FontWeight.w600, fontSize: 18),
         ),
         centerTitle: true,

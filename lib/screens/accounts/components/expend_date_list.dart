@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:money_management/screens/accounts/components/expend_category_list.dart';
 import 'package:money_management/utils/currence_format.dart';
+import 'package:money_management/utils/data_utils.dart';
 import 'package:money_management/utils/date_format.dart';
 
 class ExpendDateList extends StatelessWidget {
@@ -61,12 +62,33 @@ class ExpendDateList extends StatelessWidget {
                               ),
                             ],
                           ),
-                          Text(
-                            formatCurrency(
-                                expendListGroupByDate[index]['totalAmount'],
-                                true),
-                            style:
-                                TextStyle(fontSize: 20, color: Colors.red[400]),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              !isEmptyData(expendListGroupByDate[index]
+                                      ['totalIncome'])
+                                  ? Text(
+                                      formatCurrency(
+                                          expendListGroupByDate[index]
+                                              ['totalIncome'],
+                                          true),
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          color: Colors.green[400]),
+                                    )
+                                  : Container(),
+                              !isEmptyData(expendListGroupByDate[index]
+                                      ['totalExpense'])
+                                  ? Text(
+                                      formatCurrency(
+                                          expendListGroupByDate[index]
+                                              ['totalExpense'],
+                                          true),
+                                      style: TextStyle(
+                                          fontSize: 20, color: Colors.red[400]),
+                                    )
+                                  : Container()
+                            ],
                           )
                         ],
                       ),
