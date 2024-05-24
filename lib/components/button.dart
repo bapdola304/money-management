@@ -8,6 +8,7 @@ class Button extends StatelessWidget {
   final double? width;
   final double? padding;
   final bool? isLoading;
+  final Color? borderColor;
 
   const Button(
       {Key? key,
@@ -17,7 +18,8 @@ class Button extends StatelessWidget {
       this.onButtonPressed,
       this.padding = 12,
       this.width,
-      this.isLoading})
+      this.isLoading,
+      this.borderColor})
       : super(key: key);
 
   @override
@@ -33,6 +35,8 @@ class Button extends StatelessWidget {
           style: ElevatedButton.styleFrom(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15),
+                side: BorderSide(
+                    color: borderColor ?? bgColor ?? Colors.transparent),
               ),
               backgroundColor: bgColor),
           child: Padding(

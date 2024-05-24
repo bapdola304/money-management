@@ -9,11 +9,12 @@ import 'package:money_management/screens/accounts/components/TypeSelect.dart';
 import 'package:money_management/storage/locator.dart';
 import 'package:money_management/storage/user_storage.dart';
 import 'package:money_management/utils/currence_format.dart';
+import 'package:money_management/utils/data_utils.dart';
 import 'package:provider/provider.dart';
 
 class CreateAccount extends StatefulWidget {
-  const CreateAccount({Key? key}) : super(key: key);
-
+  const CreateAccount({super.key, this.accountSelected});
+  final Account? accountSelected;
   @override
   _CreateAccountState createState() => _CreateAccountState();
 }
@@ -25,6 +26,19 @@ class _CreateAccountState extends State<CreateAccount> {
   final TextEditingController _desController = TextEditingController();
   var focusNode = FocusNode();
   final sharedPrefService = serviceLocator<UserStorage>();
+  bool isEdit = false;
+
+  @override
+  void initState() {
+    super.initState();
+    isEdit = !isEmptyData(widget.accountSelected);
+    if (isEdit) {
+      _accountNameController.text = widget.accountSelected?.accountName ?? "";
+      _amountController.text =
+          formatCurrency(widget.accountSelected?.accountBalance ?? 0);
+      _desController.text = widget.accountSelected?.description ?? "";
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,9 +53,9 @@ class _CreateAccountState extends State<CreateAccount> {
               Icons.arrow_back_ios_rounded,
               color: Colors.white,
             )),
-        title: const Text(
-          'Thêm tài khoản',
-          style: TextStyle(
+        title: Text(
+          isEdit ? 'Sửa tài khoản' : 'Thêm tài khoản',
+          style: const TextStyle(
               color: Colors.white, fontWeight: FontWeight.w600, fontSize: 18),
         ),
         actions: [
@@ -127,6 +141,12 @@ class _CreateAccountState extends State<CreateAccount> {
     );
   }
 
+  void actionSuccess(String text, String userId) {
+    showToastification(text, 'success', context);
+    context.read<AccountProvider>().getAllAccounts(userId);
+    Navigator.pop(context);
+  }
+
   onSave() {
     String accountsValue = _accountNameController.text.trim();
     final userId = sharedPrefService.getUserId() ?? "";
@@ -136,19 +156,29 @@ class _CreateAccountState extends State<CreateAccount> {
       focusNode.requestFocus();
       return;
     }
-    Account accountRequest = Account(
+    AccountRequestModel accountRequest = AccountRequestModel(
+        id: widget.accountSelected?.id,
         accountName: _accountNameController.text,
         accountBalance: parseCurrency(_amountController.text),
         userId: userId,
         description: _desController.text);
+    if (isEdit) {
+      context
+          .read<AccountProvider>()
+          .updateAccount(widget.accountSelected?.id ?? "", accountRequest)
+          .then((response) {
+        if (response.statusCode == 204) {
+          actionSuccess('Sửa tài khoản thành lại!', userId);
+        }
+      });
+      return;
+    }
     context
         .read<AccountProvider>()
         .createAccount(accountRequest)
         .then((response) {
       if (response.statusCode == 201) {
-        showToastification('Thêm tài khoản thành công!', 'success', context);
-        context.read<AccountProvider>().getAllAccounts(userId);
-        Navigator.pop(context);
+        actionSuccess('Tạo tài khoản thành công!', userId);
       }
     });
   }

@@ -22,4 +22,17 @@ class Request {
         await http.post(uri, headers: headers, body: json.encode(body));
     return response;
   }
+
+  Future<dynamic> put(String url, dynamic body) async {
+    final uri = Uri.parse(baseUrl + url);
+    var response =
+        await http.put(uri, headers: headers, body: json.encode(body));
+    return response;
+  }
+
+  Future<dynamic> delete(String url) async {
+    final uri = Uri.parse(baseUrl + url);
+    var response = await http.delete(uri, headers: headers);
+    return response;
+  }
 }

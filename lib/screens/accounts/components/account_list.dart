@@ -3,7 +3,7 @@ import 'package:money_management/model/account.dart';
 import 'package:money_management/utils/currence_format.dart';
 
 class AccountList extends StatelessWidget {
-  final Function()? onActionsPressed;
+  final Function(Account account)? onActionsPressed;
   final Function(Account account)? onItemClicked;
   final List<Account> accountList;
   const AccountList(
@@ -65,7 +65,7 @@ class AccountList extends StatelessWidget {
               ),
               const SizedBox(width: 8),
               IconButton(
-                  onPressed: onActionsPressed,
+                  onPressed: () => onActionsPressed!(accountList[index]),
                   icon: const Icon(Icons.more_vert, color: Colors.black)),
             ],
           ),

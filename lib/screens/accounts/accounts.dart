@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:money_management/components/dialog_confirm.dart';
 import 'package:money_management/components/empty_data.dart';
+import 'package:money_management/components/show_toastification.dart';
 import 'package:money_management/model/account.dart';
 import 'package:money_management/provider/account_provider.dart';
 import 'package:money_management/screens/accounts/components/account_bottom_sheet.dart';
@@ -20,19 +22,41 @@ class Accounts extends StatefulWidget {
 
 class _AccountsState extends State<Accounts> {
   final sharedPrefService = serviceLocator<UserStorage>();
+  String userId = "";
+
   @override
   void initState() {
     super.initState();
-    final userId = sharedPrefService.getUserId() ?? "";
+    userId = sharedPrefService.getUserId() ?? "";
     context.read<AccountProvider>().getAllAccounts(userId);
   }
 
-  onActionsPressed(BuildContext context) {
+  onActionsPressed(Account account) {
     showModalBottomSheet(
         context: context,
         useRootNavigator: true,
-        builder: (context) =>
-            AccountBottomSheet(onDeletePressed: () {}, onEditPressed: () {}));
+        builder: (context) => AccountBottomSheet(onDeletePressed: () {
+              showDialogConfirm(context,
+                  'Bạn có muốn xóa tài khoản: "${account.accountName}"?', () {
+                onConfirm(account.id ?? "");
+              });
+            }, onEditPressed: () {
+              Navigator.of(context, rootNavigator: true).push(
+                MaterialPageRoute(
+                  builder: (context) => CreateAccount(accountSelected: account),
+                ),
+              );
+            }));
+  }
+
+  void onConfirm(String accountId) {
+    context.read<AccountProvider>().deleteAccount(accountId).then((response) {
+      if (response.statusCode == 204) {
+        showToastification('Xóa tài khoản thành công!', 'success', context);
+        context.read<AccountProvider>().getAllAccounts(userId);
+        Navigator.pop(context);
+      }
+    });
   }
 
   renderAccountList(AccountProvider accountProviderData) {
@@ -51,7 +75,7 @@ class _AccountsState extends State<Accounts> {
                     accountBalance: account.accountBalance ?? 0),
               ));
             },
-            onActionsPressed: () => onActionsPressed(context));
+            onActionsPressed: (account) => onActionsPressed(account));
   }
 
   @override

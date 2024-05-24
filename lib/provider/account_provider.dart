@@ -27,9 +27,24 @@ class AccountProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<dynamic> createAccount(Account body) async {
+  Future<dynamic> createAccount(AccountRequestModel body) async {
     EasyLoading.show();
     final response = await _service.createAccount(body);
+    EasyLoading.dismiss();
+    return response;
+  }
+
+  Future<dynamic> updateAccount(
+      String accountId, AccountRequestModel body) async {
+    EasyLoading.show();
+    final response = await _service.updateAccount(accountId, body);
+    EasyLoading.dismiss();
+    return response;
+  }
+
+  Future<dynamic> deleteAccount(String accountId) async {
+    EasyLoading.show();
+    final response = await _service.deleteAccount(accountId);
     EasyLoading.dismiss();
     return response;
   }

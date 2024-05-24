@@ -32,7 +32,7 @@ class AccountBottomSheet extends StatelessWidget {
               InkWell(
                 onTap: () {
                   Navigator.pop(context);
-                  onEditPressed;
+                  onEditPressed();
                 },
                 child: Container(
                   padding:
@@ -53,7 +53,7 @@ class AccountBottomSheet extends StatelessWidget {
               InkWell(
                 onTap: () {
                   Navigator.pop(context);
-                  onDeletePressed;
+                  onDeletePressed();
                 },
                 child: Container(
                   padding:
