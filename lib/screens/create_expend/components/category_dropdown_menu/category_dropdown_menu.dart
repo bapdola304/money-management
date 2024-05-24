@@ -39,6 +39,8 @@ class _CategoryDropdownMenuState extends State<CategoryDropdownMenu> {
 
   @override
   Widget build(BuildContext context) {
+    debugPrint('vao category select ${widget.category}');
+    debugPrint('vao category select 222 ${widget.transactionTypeSelect}');
     return Consumer<CategoryProvider>(
       builder: (context, categoryProvider, child) =>
           MiraiDropDownMenu<CategoryModel>(

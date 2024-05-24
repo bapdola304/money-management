@@ -59,6 +59,7 @@ class ExpendRequestModel {
   final String? categoryId;
   final DateTime? dateTime;
   final String? transactionType;
+  final String? id;
 
   ExpendRequestModel(
       {required this.accountId,
@@ -66,6 +67,7 @@ class ExpendRequestModel {
       this.description,
       this.categoryId,
       this.dateTime,
+      this.id,
       this.transactionType});
 
   Map<String, dynamic> toJson() {
@@ -75,7 +77,8 @@ class ExpendRequestModel {
       'description': description,
       'categoryId': categoryId,
       'dateTime': dateTime?.toIso8601String(),
-      'transactionType': transactionType
+      'transactionType': transactionType,
+      'id': id
     };
   }
 }

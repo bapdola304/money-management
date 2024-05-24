@@ -2,16 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:money_management/components/base64_image_widget.dart';
 import 'package:money_management/components/dialog_confirm.dart';
 import 'package:money_management/components/show_toastification.dart';
+import 'package:money_management/model/expend.dart';
+import 'package:money_management/provider/category_provider.dart';
 import 'package:money_management/provider/expend_provider.dart';
+import 'package:money_management/screens/create_expend/create_expend.dart';
 import 'package:money_management/utils/currence_format.dart';
 import 'package:money_management/utils/enum.dart';
 import 'package:provider/provider.dart';
 
 class ExpendCategoryList extends StatelessWidget {
-  final Function()? onItemClicked;
   const ExpendCategoryList(
       {Key? key,
-      this.onItemClicked,
       required this.expendListGroupByCategory,
       required this.accountId})
       : super(key: key);
@@ -34,6 +35,18 @@ class ExpendCategoryList extends StatelessWidget {
     });
   }
 
+  void onItemClicked(BuildContext context, dynamic expendItem) {
+    ExpendModel expendSelected = ExpendModel.fromJson(expendItem);
+    context
+        .read<CategoryProvider>()
+        .setCategoryIdSelected(expendItem['category']['id']);
+    Navigator.of(context, rootNavigator: true).push(
+      MaterialPageRoute(
+        builder: (context) => CreateExpend(expendSelected: expendSelected),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
@@ -45,7 +58,7 @@ class ExpendCategoryList extends StatelessWidget {
         return Material(
           color: Colors.white,
           child: InkWell(
-            onTap: onItemClicked,
+            onTap: () => onItemClicked(context, expendItem),
             onLongPress: () => onDeleteExpend(context, expendItem),
             child: Container(
               margin: const EdgeInsets.only(

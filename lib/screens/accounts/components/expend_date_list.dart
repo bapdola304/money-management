@@ -112,7 +112,6 @@ class ExpendDateList extends StatelessWidget {
           ExpendCategoryList(
             accountId: accountId,
             expendListGroupByCategory: expendListGroupByDate[index]['items'],
-            onItemClicked: () {},
           )
         ]),
       ),

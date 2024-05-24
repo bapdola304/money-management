@@ -12,6 +12,10 @@ class CategoryProvider extends ChangeNotifier {
   List<IconModel> get icons => _icons;
   List<CategoryModel> _categoryList = [];
   List<CategoryModel> get categoryList => _categoryList;
+  String _categoryIdSelected = '';
+  String? get categoryIdSelected => _categoryIdSelected;
+  CategoryModel _categorySelected = CategoryModel(name: '', id: '', iconId: '');
+  CategoryModel get categorySelected => _categorySelected;
 
   Future<void> getIcons() async {
     EasyLoading.show();
@@ -33,6 +37,15 @@ class CategoryProvider extends ChangeNotifier {
     final response = await _service.getCategoryList();
     EasyLoading.dismiss();
     _categoryList = response;
+    if (_categoryIdSelected != '') {
+      _categorySelected =
+          _categoryList.firstWhere((item) => item.id == _categoryIdSelected);
+    }
+    notifyListeners();
+  }
+
+  void setCategoryIdSelected(String categoryId) {
+    _categoryIdSelected = categoryId;
     notifyListeners();
   }
 }

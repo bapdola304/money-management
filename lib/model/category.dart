@@ -33,7 +33,8 @@ class CategoryModel {
       'iconId': iconId,
       'isFavorite': isFavorite,
       'icon': icon?.toJson(),
-      'transactionType': transactionType
+      'transactionType': transactionType,
+      'id': id
     };
   }
 }

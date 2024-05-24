@@ -6,6 +6,7 @@ import 'package:money_management/model/account.dart';
 import 'package:money_management/model/category.dart';
 import 'package:money_management/model/expend.dart';
 import 'package:money_management/provider/account_provider.dart';
+import 'package:money_management/provider/category_provider.dart';
 import 'package:money_management/provider/expend_provider.dart';
 import 'package:money_management/screens/accounts/components/TypeSelect.dart';
 import 'package:money_management/screens/create_expend/components/account_dropdown_menu/account_dropdown_menu.dart';
@@ -21,7 +22,8 @@ import 'package:money_management/components/button.dart';
 import 'package:money_management/components/show_toastification.dart';
 
 class CreateExpend extends StatefulWidget {
-  const CreateExpend({Key? key}) : super(key: key);
+  const CreateExpend({Key? key, this.expendSelected}) : super(key: key);
+  final ExpendModel? expendSelected;
 
   @override
   _CreateExpendState createState() => _CreateExpendState();
@@ -39,10 +41,26 @@ class _CreateExpendState extends State<CreateExpend> {
   ValueNotifier<TransactionTypeSelect> transactionTypeSelected =
       ValueNotifier(transactionTypeList[0]);
   DateTime selectedDate = DateTime.now();
+  bool isEdit = false;
 
   @override
   void initState() {
     super.initState();
+    isEdit = !isEmptyData(widget.expendSelected);
+    if (isEdit) {
+      _amountController.text =
+          formatCurrency(widget.expendSelected?.amount ?? 0);
+      _desController.text = widget.expendSelected?.description ?? "";
+      selectedDate = widget.expendSelected?.dateTime ?? DateTime.now();
+      transactionTypeSelected.value =
+          getTransactionTypeByValue(widget.expendSelected?.transactionType);
+      categorySelected.value =
+          widget.expendSelected?.category ?? emptyCategoryData;
+    }
+  }
+
+  TransactionTypeSelect getTransactionTypeByValue(String? value) {
+    return transactionTypeList.firstWhere((item) => item.value == value);
   }
 
   _selectDate(BuildContext context) async {
@@ -62,6 +80,12 @@ class _CreateExpendState extends State<CreateExpend> {
     }
   }
 
+  void actionSuccess(String text, String accountId) {
+    showToastification(text, 'success', context);
+    context.read<ExpendProvider>().getAllExpend(accountId);
+    Navigator.pop(context);
+  }
+
   onSave() {
     if (categorySelected.value.name == '') {
       showToastification('Vui lòng chọn hạng mục!', 'warning', context);
@@ -75,13 +99,24 @@ class _CreateExpendState extends State<CreateExpend> {
         amount: parseCurrency(_amountController.text),
         categoryId: categorySelected.value.id,
         dateTime: selectedDate,
+        id: widget.expendSelected?.id,
         transactionType: transactionTypeSelected.value.value,
         description: _desController.text);
+
+    if (isEdit) {
+      context
+          .read<ExpendProvider>()
+          .updateExpend(widget.expendSelected?.id ?? "", expendRequest)
+          .then((response) {
+        if (response.statusCode == 204) {
+          actionSuccess('Sửa bản ghi thành lại!', accountId);
+        }
+      });
+      return;
+    }
     context.read<ExpendProvider>().createExpend(expendRequest).then((response) {
       if (response.statusCode == 201) {
-        showToastification('Ghi chi tiêu thành công!', 'success', context);
-        context.read<ExpendProvider>().getAllExpend(accountId);
-        Navigator.pop(context);
+        actionSuccess('Tạo bản ghi thành công!', accountId);
       }
     });
   }
@@ -93,6 +128,13 @@ class _CreateExpendState extends State<CreateExpend> {
     return isEmptyData(accountProvider.accountSelected.accountName)
         ? ValueNotifier(accountProvider.accounts[0])
         : ValueNotifier(accountProvider.accountSelected);
+  }
+
+  CategoryModel getCategorySelected(CategoryProvider categoryProvider) {
+    if (!isEmptyData(categorySelected.value.name)) {
+      return categorySelected.value;
+    }
+    return categoryProvider.categorySelected;
   }
 
   @override
@@ -148,23 +190,30 @@ class _CreateExpendState extends State<CreateExpend> {
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Column(children: [
                 const SizedBox(height: 20),
-                CategoryDropdownMenu(
-                  onChanged: (category) {
-                    setState(() {
-                      categorySelected.value = category;
-                    });
-                  },
-                  category: categorySelected,
-                  transactionTypeSelect: transactionTypeSelected.value,
+                Consumer<CategoryProvider>(
+                  builder: (context, categoryProvider, child) =>
+                      CategoryDropdownMenu(
+                    onChanged: (category) {
+                      setState(() {
+                        categorySelected.value = category;
+                      });
+                    },
+                    category:
+                        ValueNotifier(getCategorySelected(categoryProvider)),
+                    transactionTypeSelect: transactionTypeSelected.value,
+                  ),
                 ),
-                FavoriteList(
-                  categorySelected: categorySelected.value,
-                  transactionTypeSelect: transactionTypeSelected.value,
-                  onItemClicked: (category) {
-                    setState(() {
-                      categorySelected.value = category;
-                    });
-                  },
+                Consumer<CategoryProvider>(
+                  builder: (context, categoryProvider, child) => FavoriteList(
+                    categoryList: categoryProvider.categoryList,
+                    categorySelected: getCategorySelected(categoryProvider),
+                    transactionTypeSelect: transactionTypeSelected.value,
+                    onItemClicked: (category) {
+                      setState(() {
+                        categorySelected.value = category;
+                      });
+                    },
+                  ),
                 ),
                 const SizedBox(height: 20),
                 TextFieldCustom(
@@ -207,7 +256,7 @@ class _CreateExpendState extends State<CreateExpend> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Button(
-                textButton: 'Ghi',
+                textButton: isEdit ? 'Lưu' : 'Ghi',
                 onButtonPressed: onSave,
                 bgColor: Colors.green,
               ),

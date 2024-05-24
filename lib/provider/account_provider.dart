@@ -18,7 +18,6 @@ class AccountProvider extends ChangeNotifier {
     EasyLoading.show();
     final response = await _service.getAll(userId);
     EasyLoading.dismiss();
-    debugPrint(_accountIdSelected.toString());
     _accounts = response;
     if (_accountIdSelected != '') {
       _accountSelected =
