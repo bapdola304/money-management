@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:money_management/components/empty_data.dart';
 import 'package:money_management/provider/expend_provider.dart';
+import 'package:money_management/screens/accounts/components/current_balance.dart';
 import 'package:money_management/screens/accounts/components/expend_date_list.dart';
+import 'package:money_management/screens/accounts/components/total_income_expense.dart';
 import 'package:money_management/screens/create_expend/create_expend.dart';
 import 'package:money_management/utils/data_format.dart';
 import 'package:money_management/utils/data_utils.dart';
 import 'package:provider/provider.dart';
 
 class Expend extends StatefulWidget {
-  const Expend({super.key, required this.accountId, required this.accountName});
+  const Expend(
+      {super.key,
+      required this.accountId,
+      required this.accountName,
+      required this.accountBalance});
   final String accountId;
   final String accountName;
+  final int accountBalance;
   @override
   _ExpendState createState() => _ExpendState();
 }
@@ -52,45 +59,35 @@ class _ExpendState extends State<Expend> {
       ),
       body: Container(
         color: const Color(0xFFefeff2),
-        child: Column(
-          children: [
-            Container(
-              color: Colors.white,
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-              child: const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text('30 ngày gần nhất',
-                      style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.green,
-                          fontWeight: FontWeight.w600)),
-                  Icon(Icons.keyboard_arrow_right_rounded, color: Colors.green)
-                ],
+        child: Consumer<ExpendProvider>(
+          builder: (context, expendProviderData, _) => Column(
+            children: [
+              Container(
+                color: Colors.white,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('30 ngày gần nhất',
+                        style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.green,
+                            fontWeight: FontWeight.w600)),
+                    Icon(Icons.keyboard_arrow_right_rounded,
+                        color: Colors.green)
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(height: 10),
-            Container(
-              color: Colors.white,
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-              child: const Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Số dư hiện tại',
-                      style: TextStyle(fontSize: 16, color: Colors.black54)),
-                  Text('44.444.440 đ',
-                      style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w600)),
-                ],
-              ),
-            ),
-            Expanded(
-                child: Consumer<ExpendProvider>(
-                    builder: (context, expendProviderData, child) =>
-                        renderExpendList(expendProviderData)))
-          ],
+              const SizedBox(height: 10),
+              TotalIncomeExpense(listExpend: expendProviderData.expendList),
+              const SizedBox(height: 10),
+              CurrentBalance(
+                  listExpend: expendProviderData.expendList,
+                  accountBalance: widget.accountBalance),
+              Expanded(child: renderExpendList(expendProviderData))
+            ],
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -100,7 +97,7 @@ class _ExpendState extends State<Expend> {
         onPressed: () {
           Navigator.of(context, rootNavigator: true).push(
             MaterialPageRoute(
-              builder: (context) => CreateExpend(),
+              builder: (context) => const CreateExpend(),
             ),
           );
         },

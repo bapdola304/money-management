@@ -4,7 +4,7 @@ import 'package:money_management/utils/currence_format.dart';
 
 class AccountList extends StatelessWidget {
   final Function()? onActionsPressed;
-  final Function(String? accountId, String? accountName)? onItemClicked;
+  final Function(Account account)? onItemClicked;
   final List<Account> accountList;
   const AccountList(
       {super.key,
@@ -12,18 +12,12 @@ class AccountList extends StatelessWidget {
       this.onItemClicked,
       required this.accountList});
 
-  String formatCurrencyData(int value) {
-    String formattedValue = formatCurrency(value.toString());
-    return '-$formattedValue ₫';
-  }
-
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
       itemCount: accountList.length,
       itemBuilder: (context, index) => InkWell(
-        onTap: () => onItemClicked!(
-            accountList[index].id, accountList[index].accountName),
+        onTap: () => onItemClicked!(accountList[index]),
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 8),
           margin: const EdgeInsets.only(top: 10),
@@ -49,7 +43,7 @@ class AccountList extends StatelessWidget {
                 ),
                 child: Image.asset(
                   'assets/icons/wallet.png',
-                  width: 50,
+                  width: 40,
                 ),
               ),
               const SizedBox(width: 16.0),
@@ -61,11 +55,11 @@ class AccountList extends StatelessWidget {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                            fontSize: 15, fontWeight: FontWeight.bold)),
+                            fontSize: 16, fontWeight: FontWeight.bold)),
                     Text(
-                        formatCurrencyData(
-                            accountList[index].accountBalance ?? 0),
-                        style: const TextStyle(fontSize: 14, color: Colors.red))
+                        formatCurrency(accountList[index].accountBalance, true),
+                        style: const TextStyle(
+                            fontSize: 14, color: Colors.black87))
                   ],
                 ),
               ),

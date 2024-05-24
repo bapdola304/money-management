@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:money_management/components/empty_data.dart';
+import 'package:money_management/model/account.dart';
 import 'package:money_management/provider/account_provider.dart';
 import 'package:money_management/screens/accounts/components/account_bottom_sheet.dart';
 import 'package:money_management/screens/accounts/components/account_list.dart';
@@ -39,13 +40,15 @@ class _AccountsState extends State<Accounts> {
         ? const EmptyData()
         : AccountList(
             accountList: accountProviderData.accounts,
-            onItemClicked: (accountId, accountName) {
+            onItemClicked: (Account account) {
               context
                   .read<AccountProvider>()
-                  .setAccountIdSelected(accountId ?? "");
+                  .setAccountIdSelected(account.id ?? "");
               Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
                 builder: (context) => Expend(
-                    accountId: accountId ?? "", accountName: accountName ?? ""),
+                    accountId: account.id ?? "",
+                    accountName: account.accountName,
+                    accountBalance: account.accountBalance ?? 0),
               ));
             },
             onActionsPressed: () => onActionsPressed(context));
