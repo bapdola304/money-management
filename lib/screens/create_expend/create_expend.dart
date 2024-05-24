@@ -134,7 +134,7 @@ class _CreateExpendState extends State<CreateExpend> {
     if (!isEmptyData(categorySelected.value.name)) {
       return categorySelected.value;
     }
-    return categoryProvider.categorySelected;
+    return isEdit ? categoryProvider.categorySelected : emptyCategoryData;
   }
 
   @override
