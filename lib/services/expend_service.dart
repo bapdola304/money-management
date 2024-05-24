@@ -37,4 +37,18 @@ class ExpendService {
         duration: const Duration(seconds: 5));
     return null;
   }
+
+  Future<dynamic> deleteExpend(String expendId) async {
+    final url = '/expend?id=eq.$expendId';
+    final response = await request.delete(url);
+    if (response.statusCode == 204) {
+      return response;
+    }
+    final json = jsonDecode(response.body);
+    EasyLoading.showError('Có lỗi xảy ra: ${json['message']}',
+        maskType: EasyLoadingMaskType.clear,
+        dismissOnTap: true,
+        duration: const Duration(seconds: 5));
+    return null;
+  }
 }

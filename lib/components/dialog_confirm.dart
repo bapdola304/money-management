@@ -31,7 +31,7 @@ showDialogConfirm(
                   'assets/icons/delete_confirm.svg',
                   width: 120,
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 20),
                 Expanded(
                     child: Text(content!,
                         style: const TextStyle(

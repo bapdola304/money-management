@@ -33,6 +33,7 @@ class _ExpendState extends State<Expend> {
     return isEmptyData(expendProviderData.expendList)
         ? const EmptyData()
         : ExpendDateList(
+            accountId: widget.accountId,
             expendListGroupByDate:
                 groupAndFormatByDate(expendProviderData.expendList));
   }

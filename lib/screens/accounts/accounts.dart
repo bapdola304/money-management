@@ -95,6 +95,7 @@ class _AccountsState extends State<Accounts> {
           centerTitle: true,
         ),
         body: Container(
+            width: double.infinity,
             color: const Color(0xFFefeff2),
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Consumer<AccountProvider>(

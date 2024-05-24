@@ -5,9 +5,11 @@ import 'package:money_management/utils/data_utils.dart';
 import 'package:money_management/utils/date_format.dart';
 
 class ExpendDateList extends StatelessWidget {
-  const ExpendDateList({Key? key, required this.expendListGroupByDate})
+  const ExpendDateList(
+      {Key? key, required this.expendListGroupByDate, required this.accountId})
       : super(key: key);
   final List<Map<String, dynamic>> expendListGroupByDate;
+  final String accountId;
 
   @override
   Widget build(BuildContext context) {
@@ -108,6 +110,7 @@ class ExpendDateList extends StatelessWidget {
             ],
           ),
           ExpendCategoryList(
+            accountId: accountId,
             expendListGroupByCategory: expendListGroupByDate[index]['items'],
             onItemClicked: () {},
           )
