@@ -143,8 +143,8 @@ class _CreateAccountState extends State<CreateAccount> {
 
   void actionSuccess(String text, String userId) {
     showToastification(text, 'success', context);
-    context.read<AccountProvider>().getAllAccounts(userId);
     Navigator.pop(context);
+    context.read<AccountProvider>().getAllAccounts(userId);
   }
 
   onSave() {
@@ -156,7 +156,7 @@ class _CreateAccountState extends State<CreateAccount> {
       focusNode.requestFocus();
       return;
     }
-    AccountRequestModel accountRequest = AccountRequestModel(
+    Account accountRequest = Account(
         id: widget.accountSelected?.id,
         accountName: _accountNameController.text,
         accountBalance: parseCurrency(_amountController.text),

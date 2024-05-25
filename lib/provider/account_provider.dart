@@ -13,28 +13,29 @@ class AccountProvider extends ChangeNotifier {
   String? get accountIdSelected => _accountIdSelected;
   Account _accountSelected = Account(accountName: '', id: '');
   Account get accountSelected => _accountSelected;
+  bool loading = false;
 
   Future<void> getAllAccounts(String userId) async {
-    EasyLoading.show();
+    loading = true;
     final response = await _service.getAll(userId);
-    EasyLoading.dismiss();
+    loading = false;
     _accounts = response;
     if (_accountIdSelected != '') {
-      _accountSelected =
-          _accounts.firstWhere((item) => item.id == _accountIdSelected);
+      _accountSelected = _accounts.firstWhere(
+          (item) => item.id == _accountIdSelected,
+          orElse: () => Account(accountName: '', id: ''));
     }
     notifyListeners();
   }
 
-  Future<dynamic> createAccount(AccountRequestModel body) async {
+  Future<dynamic> createAccount(Account body) async {
     EasyLoading.show();
     final response = await _service.createAccount(body);
     EasyLoading.dismiss();
     return response;
   }
 
-  Future<dynamic> updateAccount(
-      String accountId, AccountRequestModel body) async {
+  Future<dynamic> updateAccount(String accountId, Account body) async {
     EasyLoading.show();
     final response = await _service.updateAccount(accountId, body);
     EasyLoading.dismiss();

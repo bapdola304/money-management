@@ -54,7 +54,8 @@ class ExpendService {
 
   Future<dynamic> updateExpend(String expendId, ExpendRequestModel body) async {
     final url = '/expend?id=eq.$expendId';
-    final response = await request.put(url, body);
+    final jsonBody = body.toJsonWithId();
+    final response = await request.put(url, jsonBody);
     if (response.statusCode == 204) {
       return response;
     }

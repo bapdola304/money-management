@@ -9,6 +9,7 @@ import 'package:money_management/screens/category/components/category_bottom_she
 import 'package:money_management/screens/category/components/category_list.dart';
 import 'package:money_management/screens/category/components/icon_dropdown_menu/icon_dropdown_menu.dart';
 import 'package:money_management/screens/category/components/search_input.dart';
+import 'package:money_management/skeletons/skeleton_category_list.dart';
 import 'package:money_management/utils/enum.dart';
 import 'package:provider/provider.dart';
 import 'package:wc_form_validators/wc_form_validators.dart';
@@ -197,12 +198,15 @@ class _CreateCategoryState extends State<Category>
                 children: [
                   Consumer<CategoryProvider>(
                     builder: (context, categoryProviderData, child) =>
-                        CategoryTabList(
-                            categoryList: filterCategoryList(
-                                categoryProviderData.categoryList,
-                                TransactionType.expense.toString()),
-                            onItemClicked: () {},
-                            onActionsPressed: () => onActionsPressed(context)),
+                        categoryProviderData.loading
+                            ? const SkeletonCategoryList()
+                            : CategoryTabList(
+                                categoryList: filterCategoryList(
+                                    categoryProviderData.categoryList,
+                                    TransactionType.expense.toString()),
+                                onItemClicked: () {},
+                                onActionsPressed: () =>
+                                    onActionsPressed(context)),
                   ),
                   Consumer<CategoryProvider>(
                     builder: (context, categoryProviderData, child) =>

@@ -8,6 +8,7 @@ import 'package:money_management/screens/accounts/components/account_bottom_shee
 import 'package:money_management/screens/accounts/components/account_list.dart';
 import 'package:money_management/screens/accounts/create_account.dart';
 import 'package:money_management/screens/accounts/expend.dart';
+import 'package:money_management/skeletons/skeleton_account_list.dart';
 import 'package:money_management/storage/locator.dart';
 import 'package:money_management/storage/user_storage.dart';
 import 'package:money_management/utils/data_utils.dart';
@@ -28,7 +29,7 @@ class _AccountsState extends State<Accounts> {
   void initState() {
     super.initState();
     userId = sharedPrefService.getUserId() ?? "";
-    context.read<AccountProvider>().getAllAccounts(userId);
+    Provider.of<AccountProvider>(context, listen: false).getAllAccounts(userId);
   }
 
   onActionsPressed(Account account) {
@@ -53,33 +54,39 @@ class _AccountsState extends State<Accounts> {
     context.read<AccountProvider>().deleteAccount(accountId).then((response) {
       if (response.statusCode == 204) {
         showToastification('Xóa tài khoản thành công!', 'success', context);
-        context.read<AccountProvider>().getAllAccounts(userId);
+        Provider.of<AccountProvider>(context, listen: false)
+            .getAllAccounts(userId);
         Navigator.pop(context);
       }
     });
   }
 
   renderAccountList(AccountProvider accountProviderData) {
-    return isEmptyData(accountProviderData.accounts)
-        ? const EmptyData()
-        : AccountList(
-            accountList: accountProviderData.accounts,
-            onItemClicked: (Account account) {
-              context
-                  .read<AccountProvider>()
-                  .setAccountIdSelected(account.id ?? "");
-              Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
-                builder: (context) => Expend(
-                    accountId: account.id ?? "",
-                    accountName: account.accountName,
-                    accountBalance: account.accountBalance ?? 0),
-              ));
-            },
-            onActionsPressed: (account) => onActionsPressed(account));
+    return accountProviderData.loading
+        ? const SkeletonAccountList()
+        : isEmptyData(accountProviderData.accounts)
+            ? const EmptyData()
+            : AccountList(
+                accountList: accountProviderData.accounts,
+                onItemClicked: (Account account) {
+                  context
+                      .read<AccountProvider>()
+                      .setAccountIdSelected(account.id ?? "");
+                  Navigator.of(context, rootNavigator: true)
+                      .push(MaterialPageRoute(
+                    builder: (context) => Expend(
+                        accountId: account.id ?? "",
+                        accountName: account.accountName,
+                        accountBalance: account.accountBalance ?? 0),
+                  ));
+                },
+                onActionsPressed: (account) => onActionsPressed(account));
   }
 
   @override
   Widget build(BuildContext context) {
+    // only use in children widget, because it will re-build widget
+    final accountProviderData = Provider.of<AccountProvider>(context);
     return Container(
       child: Scaffold(
         appBar: AppBar(
@@ -98,9 +105,7 @@ class _AccountsState extends State<Accounts> {
             width: double.infinity,
             color: const Color(0xFFefeff2),
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Consumer<AccountProvider>(
-                builder: (context, accountProviderData, child) =>
-                    renderAccountList(accountProviderData))),
+            child: renderAccountList(accountProviderData)),
         floatingActionButton: FloatingActionButton(
           heroTag: "btn1",
           backgroundColor: Colors.green,

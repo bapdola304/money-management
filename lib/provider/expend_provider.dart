@@ -9,11 +9,12 @@ class ExpendProvider extends ChangeNotifier {
   final _service = ExpendService();
   List<ExpendModel> _expendList = [];
   List<ExpendModel> get expendList => _expendList;
+  bool loading = false;
 
   Future<List<ExpendModel>> getAllExpend(String accountId) async {
-    EasyLoading.show();
+    loading = true;
     final response = await _service.getAll(accountId);
-    EasyLoading.dismiss();
+    loading = false;
     _expendList = response;
     notifyListeners();
     return response;

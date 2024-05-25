@@ -19,7 +19,7 @@ class AccountService {
     return [];
   }
 
-  Future<dynamic> createAccount(AccountRequestModel body) async {
+  Future<dynamic> createAccount(Account body) async {
     const url = '/account';
     final response = await request.post(url, body);
     if (response.statusCode == 201) {
@@ -33,10 +33,10 @@ class AccountService {
     return null;
   }
 
-  Future<dynamic> updateAccount(
-      String accountId, AccountRequestModel body) async {
+  Future<dynamic> updateAccount(String accountId, Account body) async {
     final url = '/account?id=eq.$accountId';
-    final response = await request.put(url, body);
+    final jsonBody = body.toJsonWithId();
+    final response = await request.put(url, jsonBody);
     if (response.statusCode == 204) {
       return response;
     }

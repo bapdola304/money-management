@@ -16,6 +16,7 @@ class CategoryProvider extends ChangeNotifier {
   String? get categoryIdSelected => _categoryIdSelected;
   CategoryModel _categorySelected = CategoryModel(name: '', id: '', iconId: '');
   CategoryModel get categorySelected => _categorySelected;
+  bool loading = false;
 
   Future<void> getIcons() async {
     EasyLoading.show();
@@ -33,9 +34,9 @@ class CategoryProvider extends ChangeNotifier {
   }
 
   Future<void> getCategoryList() async {
-    EasyLoading.show();
+    loading = true;
     final response = await _service.getCategoryList();
-    EasyLoading.dismiss();
+    loading = false;
     _categoryList = response;
     if (_categoryIdSelected != '') {
       _categorySelected =

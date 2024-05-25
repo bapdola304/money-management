@@ -5,6 +5,7 @@ import 'package:money_management/screens/accounts/components/current_balance.dar
 import 'package:money_management/screens/accounts/components/expend_date_list.dart';
 import 'package:money_management/screens/accounts/components/total_income_expense.dart';
 import 'package:money_management/screens/create_expend/create_expend.dart';
+import 'package:money_management/skeletons/skeloton_expend.dart';
 import 'package:money_management/utils/data_format.dart';
 import 'package:money_management/utils/data_utils.dart';
 import 'package:provider/provider.dart';
@@ -26,7 +27,8 @@ class _ExpendState extends State<Expend> {
   @override
   void initState() {
     super.initState();
-    context.read<ExpendProvider>().getAllExpend(widget.accountId);
+    Provider.of<ExpendProvider>(context, listen: false)
+        .getAllExpend(widget.accountId);
   }
 
   renderExpendList(ExpendProvider expendProviderData) {
@@ -61,34 +63,38 @@ class _ExpendState extends State<Expend> {
       body: Container(
         color: const Color(0xFFefeff2),
         child: Consumer<ExpendProvider>(
-          builder: (context, expendProviderData, _) => Column(
-            children: [
-              Container(
-                color: Colors.white,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                child: const Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('30 ngày gần nhất',
-                        style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.green,
-                            fontWeight: FontWeight.w600)),
-                    Icon(Icons.keyboard_arrow_right_rounded,
-                        color: Colors.green)
-                  ],
-                ),
-              ),
-              const SizedBox(height: 10),
-              TotalIncomeExpense(listExpend: expendProviderData.expendList),
-              const SizedBox(height: 10),
-              CurrentBalance(
-                  listExpend: expendProviderData.expendList,
-                  accountBalance: widget.accountBalance),
-              Expanded(child: renderExpendList(expendProviderData))
-            ],
-          ),
+          builder: (context, expendProviderData, _) =>
+              expendProviderData.loading
+                  ? const SkeletonExpend()
+                  : Column(
+                      children: [
+                        Container(
+                          color: Colors.white,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 16),
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text('30 ngày gần nhất',
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.green,
+                                      fontWeight: FontWeight.w600)),
+                              Icon(Icons.keyboard_arrow_right_rounded,
+                                  color: Colors.green)
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        TotalIncomeExpense(
+                            listExpend: expendProviderData.expendList),
+                        const SizedBox(height: 10),
+                        CurrentBalance(
+                            listExpend: expendProviderData.expendList,
+                            accountBalance: widget.accountBalance),
+                        Expanded(child: renderExpendList(expendProviderData))
+                      ],
+                    ),
         ),
       ),
       floatingActionButton: FloatingActionButton(

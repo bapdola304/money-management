@@ -29,30 +29,14 @@ class Account {
       'userId': userId
     };
   }
-}
 
-class AccountRequestModel {
-  final String accountName;
-  final int? accountBalance;
-  final String? description;
-  final String? userId;
-  final String? id;
-
-  AccountRequestModel({
-    this.id,
-    required this.accountName,
-    this.accountBalance,
-    this.description,
-    this.userId,
-  });
-
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toJsonWithId() {
     return {
-      'id': id,
       'accountName': accountName,
       'accountBalance': accountBalance,
       'description': description,
-      'userId': userId
+      'userId': userId,
+      'id': id,
     };
   }
 }

@@ -77,6 +77,17 @@ class ExpendRequestModel {
       'description': description,
       'categoryId': categoryId,
       'dateTime': dateTime?.toIso8601String(),
+      'transactionType': transactionType
+    };
+  }
+
+  Map<String, dynamic> toJsonWithId() {
+    return {
+      'accountId': accountId,
+      'amount': amount,
+      'description': description,
+      'categoryId': categoryId,
+      'dateTime': dateTime?.toIso8601String(),
       'transactionType': transactionType,
       'id': id
     };
