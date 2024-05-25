@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:money_management/utils/currence_format.dart';
 import 'package:flutter/services.dart';
 
-class CurrencyInput extends StatelessWidget {
+class CurrencyInput extends StatefulWidget {
   const CurrencyInput(
       {super.key,
       TextEditingController? controller,
@@ -15,22 +15,51 @@ class CurrencyInput extends StatelessWidget {
   final MaterialColor? numberColor;
 
   @override
+  State<CurrencyInput> createState() => _CurrencyInputState();
+}
+
+class _CurrencyInputState extends State<CurrencyInput> {
+  final FocusNode _focusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNode.addListener(() {
+      if (_focusNode.hasFocus) {
+        // Move cursor to the beginning
+        setState(() {
+          widget._controller?.selection = TextSelection.fromPosition(
+            TextPosition(offset: 1),
+          );
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-      Text(text),
+      Text(widget.text),
       Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           SizedBox(
             width: size.width * 0.7,
             child: TextField(
-                controller: _controller,
+                controller: widget._controller,
+                focusNode: _focusNode,
                 style: TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
-                    color: numberColor),
-                textAlign: TextAlign.right,
+                    color: widget.numberColor),
+                textAlign: TextAlign.end,
                 decoration: const InputDecoration(
                   border: UnderlineInputBorder(),
                   contentPadding: EdgeInsets.symmetric(vertical: 0),
@@ -38,13 +67,12 @@ class CurrencyInput extends StatelessWidget {
                 keyboardType: TextInputType.number,
                 inputFormatters: [
                   FilteringTextInputFormatter.digitsOnly,
+                  new LengthLimitingTextInputFormatter(13),
                 ],
                 onChanged: (value) {
                   String formattedValue = formatCurrency(value);
-                  _controller?.value = TextEditingValue(
+                  widget._controller?.value = TextEditingValue(
                     text: formattedValue,
-                    selection:
-                        TextSelection.collapsed(offset: formattedValue.length),
                   );
                 }),
           ),

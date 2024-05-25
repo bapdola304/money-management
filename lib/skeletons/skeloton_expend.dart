@@ -85,7 +85,7 @@ class SkeletonExpend extends StatelessWidget {
         Expanded(
           child: ListView.builder(
             scrollDirection: Axis.vertical,
-            itemCount: 8,
+            itemCount: 7,
             itemBuilder: (BuildContext context, int index) =>
                 const SkeletionExpendItem(),
           ),
