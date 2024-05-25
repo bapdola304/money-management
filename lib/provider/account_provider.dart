@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:money_management/model/account.dart';
 import 'package:money_management/services/account_service.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:money_management/utils/data_utils.dart';
 
 class AccountProvider extends ChangeNotifier {
   BuildContext context;
@@ -9,8 +10,6 @@ class AccountProvider extends ChangeNotifier {
   final _service = AccountService();
   List<Account> _accounts = [];
   List<Account> get accounts => _accounts;
-  String _accountIdSelected = '';
-  String? get accountIdSelected => _accountIdSelected;
   Account _accountSelected = Account(accountName: '', id: '');
   Account get accountSelected => _accountSelected;
   bool loading = false;
@@ -20,9 +19,9 @@ class AccountProvider extends ChangeNotifier {
     final response = await _service.getAll(userId);
     loading = false;
     _accounts = response;
-    if (_accountIdSelected != '') {
+    if (!isEmptyData(_accountSelected)) {
       _accountSelected = _accounts.firstWhere(
-          (item) => item.id == _accountIdSelected,
+          (item) => item.id == _accountSelected.id,
           orElse: () => Account(accountName: '', id: ''));
     }
     notifyListeners();
@@ -49,8 +48,8 @@ class AccountProvider extends ChangeNotifier {
     return response;
   }
 
-  void setAccountIdSelected(String accountId) {
-    _accountIdSelected = accountId;
+  void setAccountSelected(Account account) {
+    _accountSelected = account;
     notifyListeners();
   }
 }

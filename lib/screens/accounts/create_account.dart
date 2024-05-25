@@ -168,7 +168,7 @@ class _CreateAccountState extends State<CreateAccount> {
           .updateAccount(widget.accountSelected?.id ?? "", accountRequest)
           .then((response) {
         if (response.statusCode == 204) {
-          actionSuccess('Sửa tài khoản thành lại!', userId);
+          actionSuccess('Sửa tài khoản thành công!', userId);
         }
       });
       return;

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:money_management/components/empty_data.dart';
+import 'package:money_management/provider/account_provider.dart';
 import 'package:money_management/provider/expend_provider.dart';
 import 'package:money_management/screens/accounts/components/current_balance.dart';
 import 'package:money_management/screens/accounts/components/expend_date_list.dart';
@@ -53,10 +54,12 @@ class _ExpendState extends State<Expend> {
               Icons.arrow_back_ios_rounded,
               color: Colors.white,
             )),
-        title: Text(
-          widget.accountName,
-          style: const TextStyle(
-              color: Colors.white, fontWeight: FontWeight.w600, fontSize: 18),
+        title: Consumer<AccountProvider>(
+          builder: (context, accountProviderData, _) => Text(
+            accountProviderData.accountSelected.accountName,
+            style: const TextStyle(
+                color: Colors.white, fontWeight: FontWeight.w600, fontSize: 18),
+          ),
         ),
         centerTitle: true,
       ),

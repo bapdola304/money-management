@@ -22,6 +22,7 @@ showDialogConfirm(
           ),
           content: Container(
             height: 220,
+            width: screenWidth * 0.8,
             padding: const EdgeInsets.only(bottom: 10, left: 10, right: 10),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,

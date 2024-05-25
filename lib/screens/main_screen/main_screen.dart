@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:money_management/components/show_toastification.dart';
+import 'package:money_management/provider/account_provider.dart';
 import 'package:money_management/screens/accounts/accounts.dart';
 import 'package:money_management/screens/category/category.dart';
 import 'package:money_management/screens/create_expend/create_expend.dart';
@@ -6,6 +8,8 @@ import 'package:money_management/screens/home/home.dart';
 import 'package:money_management/screens/main_screen/nav_bar.dart';
 import 'package:money_management/screens/main_screen/nav_model.dart';
 import 'package:money_management/screens/profile/profile.dart';
+import 'package:money_management/utils/data_utils.dart';
+import 'package:provider/provider.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -80,21 +84,32 @@ class _MainScreenState extends State<MainScreen> {
           width: 64,
           child: Visibility(
             visible: MediaQuery.of(context).viewInsets.bottom == 0.0,
-            child: FloatingActionButton(
-              backgroundColor: Colors.white,
-              elevation: 0,
-              onPressed: () => Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const CreateExpend(),
+            child: Consumer<AccountProvider>(
+              builder: (context, accountProviderData, child) =>
+                  FloatingActionButton(
+                backgroundColor: Colors.white,
+                elevation: 0,
+                onPressed: () {
+                  if (isEmptyData(accountProviderData.accounts)) {
+                    return showToastification(
+                        'Vui lòng tạo tài khoản để ghi thu chi!',
+                        'warning',
+                        context);
+                  }
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const CreateExpend(),
+                    ),
+                  );
+                },
+                shape: RoundedRectangleBorder(
+                  side: const BorderSide(width: 3, color: Colors.green),
+                  borderRadius: BorderRadius.circular(100),
                 ),
-              ),
-              shape: RoundedRectangleBorder(
-                side: const BorderSide(width: 3, color: Colors.green),
-                borderRadius: BorderRadius.circular(100),
-              ),
-              child: const Icon(
-                Icons.add,
-                color: Colors.green,
+                child: const Icon(
+                  Icons.add,
+                  color: Colors.green,
+                ),
               ),
             ),
           ),

@@ -87,23 +87,23 @@ class _CreateCategoryState extends State<Category>
               child: SingleChildScrollView(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 25),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconDropdownMenu(
-                      onChanged: (icon) {
-                        setState(() {
-                          iconSelected.value = icon;
-                        });
-                      },
-                      icon: iconSelected,
-                    ),
-                    const SizedBox(height: 20),
-                    Form(
-                      key: _formKey,
-                      child: TextFieldCustom(
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconDropdownMenu(
+                        onChanged: (icon) {
+                          setState(() {
+                            iconSelected.value = icon;
+                          });
+                        },
+                        icon: iconSelected,
+                      ),
+                      const SizedBox(height: 20),
+                      TextFieldCustom(
                           hintText: 'Tên hạng mục',
                           controller: _categoryNameController,
                           icon: Image.asset(
@@ -113,14 +113,14 @@ class _CreateCategoryState extends State<Category>
                           validator: Validators.compose([
                             Validators.required('Vui lòng nhập tên hạng mục')
                           ])),
-                    ),
-                    const SizedBox(height: 20),
-                    Button(
-                      textButton: 'LƯU',
-                      bgColor: Colors.green,
-                      onButtonPressed: handleCreateCategory,
-                    )
-                  ],
+                      const SizedBox(height: 20),
+                      Button(
+                        textButton: 'LƯU',
+                        bgColor: Colors.green,
+                        onButtonPressed: handleCreateCategory,
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),

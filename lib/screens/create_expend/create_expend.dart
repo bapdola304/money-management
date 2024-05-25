@@ -80,10 +80,19 @@ class _CreateExpendState extends State<CreateExpend> {
     }
   }
 
-  void actionSuccess(String text, String accountId) {
+  void actionSuccess(String text, Account account) {
     showToastification(text, 'success', context);
-    context.read<ExpendProvider>().getAllExpend(accountId);
+    context.read<ExpendProvider>().getAllExpend(account.id ?? "");
+    context.read<AccountProvider>().setAccountSelected(account);
     Navigator.pop(context);
+  }
+
+  String? getAccountId() {
+    AccountProvider accountProviderData =
+        Provider.of<AccountProvider>(context, listen: false);
+    return accountSelected.value.id ??
+        context.read<AccountProvider>().accountSelected.id ??
+        accountProviderData.accounts[0].id;
   }
 
   onSave() {
@@ -91,11 +100,11 @@ class _CreateExpendState extends State<CreateExpend> {
       showToastification('Vui lòng chọn hạng mục!', 'warning', context);
       return;
     }
-    String accountId = accountSelected.value.id ??
-        context.read<AccountProvider>().accountSelected.id ??
-        '';
+    AccountProvider accountProviderData =
+        Provider.of<AccountProvider>(context, listen: false);
+    Account account = getAccountSelected(accountProviderData);
     ExpendRequestModel expendRequest = ExpendRequestModel(
-        accountId: accountId,
+        accountId: account.id ?? "",
         amount: parseCurrency(_amountController.text),
         categoryId: categorySelected.value.id,
         dateTime: selectedDate,
@@ -109,25 +118,25 @@ class _CreateExpendState extends State<CreateExpend> {
           .updateExpend(widget.expendSelected?.id ?? "", expendRequest)
           .then((response) {
         if (response.statusCode == 204) {
-          actionSuccess('Sửa bản ghi thành lại!', accountId);
+          actionSuccess('Sửa bản ghi thành lại!', account);
         }
       });
       return;
     }
     context.read<ExpendProvider>().createExpend(expendRequest).then((response) {
       if (response.statusCode == 201) {
-        actionSuccess('Tạo bản ghi thành công!', accountId);
+        actionSuccess('Tạo bản ghi thành công!', account);
       }
     });
   }
 
-  ValueNotifier<Account> getAccountSelected(AccountProvider accountProvider) {
+  Account getAccountSelected(AccountProvider accountProvider) {
     if (!isEmptyData(accountSelected.value.accountName)) {
-      return accountSelected;
+      return accountSelected.value;
     }
     return isEmptyData(accountProvider.accountSelected.accountName)
-        ? ValueNotifier(accountProvider.accounts[0])
-        : ValueNotifier(accountProvider.accountSelected);
+        ? accountProvider.accounts[0]
+        : accountProvider.accountSelected;
   }
 
   CategoryModel getCategorySelected(CategoryProvider categoryProvider) {
@@ -241,7 +250,7 @@ class _CreateExpendState extends State<CreateExpend> {
                         accountSelected.value = account;
                       });
                     },
-                    account: getAccountSelected(accountProvider),
+                    account: ValueNotifier(getAccountSelected(accountProvider)),
                   ),
                 ),
                 const SizedBox(height: 20),

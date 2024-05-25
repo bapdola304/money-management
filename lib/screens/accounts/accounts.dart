@@ -69,9 +69,7 @@ class _AccountsState extends State<Accounts> {
             : AccountList(
                 accountList: accountProviderData.accounts,
                 onItemClicked: (Account account) {
-                  context
-                      .read<AccountProvider>()
-                      .setAccountIdSelected(account.id ?? "");
+                  context.read<AccountProvider>().setAccountSelected(account);
                   Navigator.of(context, rootNavigator: true)
                       .push(MaterialPageRoute(
                     builder: (context) => Expend(

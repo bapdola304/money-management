@@ -65,6 +65,7 @@ class NavBar extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         child: Icon(
+          size: 30,
           icon,
           color: selected ? Colors.white : Colors.white.withOpacity(0.4),
         ),
