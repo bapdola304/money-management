@@ -73,6 +73,8 @@ class _CurrencyInputState extends State<CurrencyInput> {
                   String formattedValue = formatCurrency(value);
                   widget._controller?.value = TextEditingValue(
                     text: formattedValue,
+                    selection:
+                        TextSelection.collapsed(offset: formattedValue.length),
                   );
                 }),
           ),
