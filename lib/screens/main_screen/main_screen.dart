@@ -5,8 +5,8 @@ import 'package:money_management/screens/accounts/accounts.dart';
 import 'package:money_management/screens/category/category.dart';
 import 'package:money_management/screens/create_expend/create_expend.dart';
 import 'package:money_management/screens/home/home.dart';
-import 'package:money_management/screens/main_screen/nav_bar.dart';
 import 'package:money_management/screens/main_screen/nav_model.dart';
+import 'package:money_management/screens/navigation/custom_tab_bar.dart';
 import 'package:money_management/screens/profile/profile.dart';
 import 'package:money_management/utils/data_utils.dart';
 import 'package:provider/provider.dart';
@@ -39,6 +39,10 @@ class _MainScreenState extends State<MainScreen> {
         navKey: searchNavKey,
       ),
       NavModel(
+        page: Container(),
+        navKey: searchNavKey,
+      ),
+      NavModel(
         page: const Category(),
         navKey: notificationNavKey,
       ),
@@ -61,19 +65,11 @@ class _MainScreenState extends State<MainScreen> {
         }
       },
       child: Scaffold(
-        bottomNavigationBar: NavBar(
-          pageIndex: selectedTab,
-          onTap: (index) {
-            if (index == selectedTab) {
-              items[index]
-                  .navKey
-                  .currentState
-                  ?.popUntil((route) => route.isFirst);
-            } else {
-              setState(() {
-                selectedTab = index;
-              });
-            }
+        bottomNavigationBar: CustomTabBar(
+          onTabChange: (int tabIndex) {
+            setState(() {
+              selectedTab = tabIndex;
+            });
           },
         ),
         body: items[selectedTab].page,
