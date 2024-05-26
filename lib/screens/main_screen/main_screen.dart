@@ -10,7 +10,6 @@ import 'package:money_management/screens/navigation/custom_tab_bar.dart';
 import 'package:money_management/screens/profile/profile.dart';
 import 'package:money_management/storage/locator.dart';
 import 'package:money_management/storage/user_storage.dart';
-import 'package:money_management/utils/data_utils.dart';
 import 'package:provider/provider.dart';
 
 class MainScreen extends StatefulWidget {
