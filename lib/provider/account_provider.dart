@@ -27,6 +27,13 @@ class AccountProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<int> getAccountCounts(String userId) async {
+    loading = true;
+    final response = await _service.getAll(userId);
+    loading = false;
+    return response.length;
+  }
+
   Future<dynamic> createAccount(Account body) async {
     EasyLoading.show();
     final response = await _service.createAccount(body);

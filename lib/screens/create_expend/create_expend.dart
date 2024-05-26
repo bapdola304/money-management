@@ -36,6 +36,8 @@ class _CreateExpendState extends State<CreateExpend> {
   ValueNotifier<CategoryModel> categorySelected =
       ValueNotifier(CategoryModel(name: '', iconId: ''));
   CategoryModel emptyCategoryData = CategoryModel(name: '', iconId: '');
+  Account emptyAccountData =
+      Account(accountName: "", id: null, userId: null, accountBalance: null);
   ValueNotifier<Account> accountSelected = ValueNotifier(
       Account(accountName: "", id: null, userId: null, accountBalance: null));
   ValueNotifier<TransactionTypeSelect> transactionTypeSelected =
@@ -134,8 +136,11 @@ class _CreateExpendState extends State<CreateExpend> {
     if (!isEmptyData(accountSelected.value.accountName)) {
       return accountSelected.value;
     }
-    return isEmptyData(accountProvider.accountSelected.accountName)
+    Account accountDefaultSelected = accountProvider.accounts.isNotEmpty
         ? accountProvider.accounts[0]
+        : emptyAccountData;
+    return isEmptyData(accountProvider.accountSelected.accountName)
+        ? accountDefaultSelected
         : accountProvider.accountSelected;
   }
 

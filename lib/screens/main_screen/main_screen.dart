@@ -8,6 +8,8 @@ import 'package:money_management/screens/home/home.dart';
 import 'package:money_management/screens/main_screen/nav_model.dart';
 import 'package:money_management/screens/navigation/custom_tab_bar.dart';
 import 'package:money_management/screens/profile/profile.dart';
+import 'package:money_management/storage/locator.dart';
+import 'package:money_management/storage/user_storage.dart';
 import 'package:money_management/utils/data_utils.dart';
 import 'package:provider/provider.dart';
 
@@ -85,18 +87,26 @@ class _MainScreenState extends State<MainScreen> {
                   FloatingActionButton(
                 backgroundColor: Colors.white,
                 elevation: 0,
-                onPressed: () {
-                  if (isEmptyData(accountProviderData.accounts)) {
+                onPressed: () async {
+                  if (accountProviderData.accounts.isNotEmpty) {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const CreateExpend(),
+                      ),
+                    );
+                    return;
+                  }
+                  String userId =
+                      serviceLocator<UserStorage>().getUserId() ?? "";
+                  int counts =
+                      await Provider.of<AccountProvider>(context, listen: false)
+                          .getAccountCounts(userId);
+                  if (counts == 0) {
                     return showToastification(
                         'Vui lòng tạo tài khoản để ghi thu chi!',
                         'warning',
                         context);
                   }
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const CreateExpend(),
-                    ),
-                  );
                 },
                 shape: RoundedRectangleBorder(
                   side: const BorderSide(width: 3, color: Colors.green),
