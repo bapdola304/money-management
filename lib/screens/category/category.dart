@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:money_management/components/button.dart';
+import 'package:money_management/components/dialog_confirm.dart';
 import 'package:money_management/components/show_toastification.dart';
 import 'package:money_management/components/text_field_custom.dart';
 import 'package:money_management/model/category.dart';
@@ -34,12 +35,33 @@ class _CreateCategoryState extends State<Category>
     context.read<CategoryProvider>().getCategoryList();
   }
 
-  onActionsPressed(BuildContext context) {
+  onActionsPressed(BuildContext context, CategoryModel category) {
     showModalBottomSheet(
         context: context,
         useRootNavigator: true,
-        builder: (context) =>
-            CategoryBottomSheet(onDeletePressed: () {}, onEditPressed: () {}));
+        builder: (context) => CategoryBottomSheet(
+            onDeletePressed: () {
+              showDialogConfirm(
+                  context, 'Bạn có muốn xóa hạng mục: "${category.name}"?',
+                  () {
+                onConfirm(category.id ?? "");
+              });
+            },
+            onEditPressed: () {}));
+  }
+
+  void onConfirm(String categoryId) {
+    context
+        .read<CategoryProvider>()
+        .deleteCategory(categoryId)
+        .then((response) {
+      if (response.statusCode == 204) {
+        showToastification('Xóa hạng mục thành công!', 'success', context);
+        // Provider.of<CategoryProvider>(context, listen: true).getCategoryList();
+        context.read<CategoryProvider>().getCategoryList();
+        Navigator.pop(context);
+      }
+    });
   }
 
   handleCreateCategory() {
@@ -205,8 +227,8 @@ class _CreateCategoryState extends State<Category>
                                     categoryProviderData.categoryList,
                                     TransactionType.expense.toString()),
                                 onItemClicked: () {},
-                                onActionsPressed: () =>
-                                    onActionsPressed(context)),
+                                onActionsPressed: (category) =>
+                                    onActionsPressed(context, category)),
                   ),
                   Consumer<CategoryProvider>(
                     builder: (context, categoryProviderData, child) =>
@@ -215,7 +237,8 @@ class _CreateCategoryState extends State<Category>
                                 categoryProviderData.categoryList,
                                 TransactionType.income.toString()),
                             onItemClicked: () {},
-                            onActionsPressed: () => onActionsPressed(context)),
+                            onActionsPressed: (category) =>
+                                onActionsPressed(context, category)),
                   )
                 ],
               ))

@@ -45,6 +45,13 @@ class CategoryProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<dynamic> deleteCategory(String categoryId) async {
+    EasyLoading.show();
+    final response = await _service.deleteCategory(categoryId);
+    EasyLoading.dismiss();
+    return response;
+  }
+
   void setCategoryIdSelected(String categoryId) {
     _categoryIdSelected = categoryId;
     notifyListeners();

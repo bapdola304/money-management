@@ -9,7 +9,7 @@ class CategoryTabList extends StatelessWidget {
       this.onItemClicked,
       required this.categoryList})
       : super(key: key);
-  final Function()? onActionsPressed;
+  final Function(CategoryModel category)? onActionsPressed;
   final Function()? onItemClicked;
   final List<CategoryModel> categoryList;
 
@@ -22,7 +22,7 @@ class CategoryTabList extends StatelessWidget {
       itemCount: categoryList.length,
       itemBuilder: (context, index) => InkWell(
         onTap: onItemClicked,
-        onLongPress: onActionsPressed,
+        onLongPress: () => onActionsPressed!(categoryList[index]),
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
           margin: const EdgeInsets.symmetric(horizontal: 8),

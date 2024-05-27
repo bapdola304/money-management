@@ -49,4 +49,18 @@ class CategoryService {
     EasyLoading.showError('Có lỗi xảy ra!');
     return [];
   }
+
+  Future<dynamic> deleteCategory(String categoryId) async {
+    final url = '/category?id=eq.$categoryId';
+    final response = await request.delete(url);
+    if (response.statusCode == 204) {
+      return response;
+    }
+    final json = jsonDecode(response.body);
+    EasyLoading.showError('Có lỗi xảy ra: ${json['message']}',
+        maskType: EasyLoadingMaskType.clear,
+        dismissOnTap: true,
+        duration: const Duration(seconds: 5));
+    return null;
+  }
 }
