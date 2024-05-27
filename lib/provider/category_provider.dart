@@ -14,7 +14,8 @@ class CategoryProvider extends ChangeNotifier {
   List<CategoryModel> get categoryList => _categoryList;
   String _categoryIdSelected = '';
   String? get categoryIdSelected => _categoryIdSelected;
-  CategoryModel _categorySelected = CategoryModel(name: '', id: '', iconId: '');
+  CategoryModel _categorySelected =
+      CategoryModel(name: '', id: '', iconId: '', isFavorite: false);
   CategoryModel get categorySelected => _categorySelected;
   bool loading = false;
 
@@ -48,6 +49,22 @@ class CategoryProvider extends ChangeNotifier {
   Future<dynamic> deleteCategory(String categoryId) async {
     EasyLoading.show();
     final response = await _service.deleteCategory(categoryId);
+    EasyLoading.dismiss();
+    return response;
+  }
+
+  Future<dynamic> updateCategory(
+      String categoryId, CategoryRequestModel body) async {
+    EasyLoading.show();
+    final response = await _service.updateCategory(categoryId, body);
+    EasyLoading.dismiss();
+    return response;
+  }
+
+  Future<dynamic> updateCategoryFavorite(
+      String categoryId, CategoryFavoriteModel body) async {
+    EasyLoading.show();
+    final response = await _service.updateCategoryFavorite(categoryId, body);
     EasyLoading.dismiss();
     return response;
   }

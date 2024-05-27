@@ -30,6 +30,10 @@ class _CreateCategoryState extends State<Category>
   final TextEditingController _categoryNameController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   late TabController _tabController = TabController(length: 2, vsync: this);
+  bool isEdit = false;
+  late CategoryModel categorySelected =
+      CategoryModel(name: '', iconId: '', isFavorite: false);
+
   void initState() {
     super.initState();
     context.read<CategoryProvider>().getCategoryList();
@@ -40,6 +44,8 @@ class _CreateCategoryState extends State<Category>
         context: context,
         useRootNavigator: true,
         builder: (context) => CategoryBottomSheet(
+            categorySelected: category,
+            onUpdateFavoritePressed: () => handleUpdateFavorite(category),
             onDeletePressed: () {
               showDialogConfirm(
                   context, 'Bạn có muốn xóa hạng mục: "${category.name}"?',
@@ -47,7 +53,31 @@ class _CreateCategoryState extends State<Category>
                 onConfirm(category.id ?? "");
               });
             },
-            onEditPressed: () {}));
+            onEditPressed: () {
+              isEdit = true;
+              iconSelected.value = category.icon!;
+              _categoryNameController.text = category.name ?? "";
+              categorySelected = category;
+              showDataAlert();
+            }));
+  }
+
+  handleUpdateFavorite(CategoryModel categorySelected) {
+    CategoryFavoriteModel categoryRequest = CategoryFavoriteModel(
+      id: categorySelected.id!,
+      isFavorite: !categorySelected.isFavorite,
+    );
+    context
+        .read<CategoryProvider>()
+        .updateCategoryFavorite(categorySelected.id!, categoryRequest)
+        .then((response) {
+      if (response.statusCode == 204) {
+        showToastification(
+            'Đã thêm hạng mục vào mục hay dùng!', 'success', context);
+        context.read<CategoryProvider>().getCategoryList();
+      }
+    });
+    return;
   }
 
   void onConfirm(String categoryId) {
@@ -57,7 +87,6 @@ class _CreateCategoryState extends State<Category>
         .then((response) {
       if (response.statusCode == 204) {
         showToastification('Xóa hạng mục thành công!', 'success', context);
-        // Provider.of<CategoryProvider>(context, listen: true).getCategoryList();
         context.read<CategoryProvider>().getCategoryList();
         Navigator.pop(context);
       }
@@ -69,21 +98,42 @@ class _CreateCategoryState extends State<Category>
       CategoryRequestModel category = CategoryRequestModel(
         name: _categoryNameController.text,
         iconId: iconSelected.value.id ?? "",
+        id: categorySelected.id ?? "",
         transactionType:
             TransactionType.fromIndex(_tabController.index).toString(),
       );
+      if (isEdit) {
+        context
+            .read<CategoryProvider>()
+            .updateCategory(categorySelected.id!, category)
+            .then((response) {
+          if (response.statusCode == 204) {
+            actionSuccess('Sửa hạng mục thành công!');
+          }
+        });
+        return;
+      }
       context
           .read<CategoryProvider>()
           .createCategory(category)
           .then((response) {
         if (response.statusCode == 201) {
-          showToastification('Thêm hạng mục thành công!', 'success', context);
-          context.read<CategoryProvider>().getCategoryList();
-          Navigator.pop(context);
-          _formKey.currentState!.reset();
+          actionSuccess('Thêm hạng mục thành công!');
         }
       });
     }
+  }
+
+  actionSuccess(String text) {
+    showToastification(text, 'success', context);
+    clearForm();
+    context.read<CategoryProvider>().getCategoryList();
+    Navigator.pop(context);
+  }
+
+  clearForm() {
+    iconSelected.value = IconModel(id: '', image: '');
+    _categoryNameController.value = TextEditingValue.empty;
   }
 
   showDataAlert() {
@@ -251,6 +301,8 @@ class _CreateCategoryState extends State<Category>
         backgroundColor: Colors.green,
         elevation: 0,
         onPressed: () {
+          isEdit = false;
+          clearForm();
           showDataAlert();
         },
         shape: RoundedRectangleBorder(

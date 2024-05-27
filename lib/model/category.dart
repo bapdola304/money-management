@@ -4,14 +4,14 @@ class CategoryModel {
   final String? id;
   final String? name;
   final String iconId;
-  final bool? isFavorite;
+  final bool isFavorite;
   final IconModel? icon;
   final String? transactionType;
 
   CategoryModel(
       {required this.name,
       required this.iconId,
-      this.isFavorite,
+      required this.isFavorite,
       this.id,
       this.icon,
       this.transactionType});
@@ -42,23 +42,43 @@ class CategoryModel {
 class CategoryRequestModel {
   final String? id;
   final String? name;
-  final String iconId;
+  final String? iconId;
   final bool? isFavorite;
   final String? transactionType;
 
   CategoryRequestModel(
-      {required this.name,
-      required this.iconId,
-      this.isFavorite,
-      this.id,
-      this.transactionType});
+      {this.name, this.iconId, this.isFavorite, this.id, this.transactionType});
 
   Map<String, dynamic> toJson() {
     return {
       'name': name,
       'iconId': iconId,
-      'isFavorite': isFavorite,
+      'isFavorite': isFavorite ?? false,
       'transactionType': transactionType
+    };
+  }
+
+  Map<String, dynamic> toJsonWithId() {
+    return {
+      'name': name,
+      'iconId': iconId,
+      'isFavorite': isFavorite,
+      'transactionType': transactionType,
+      'id': id
+    };
+  }
+}
+
+class CategoryFavoriteModel {
+  final String? id;
+  final bool? isFavorite;
+
+  CategoryFavoriteModel({this.isFavorite, this.id});
+
+  Map<String, dynamic> toJsonWithId() {
+    return {
+      'id': id,
+      'isFavorite': isFavorite ?? false,
     };
   }
 }

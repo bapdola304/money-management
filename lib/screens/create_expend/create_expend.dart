@@ -34,8 +34,9 @@ class _CreateExpendState extends State<CreateExpend> {
   TextEditingController _desController = TextEditingController();
   var focusNode = FocusNode();
   ValueNotifier<CategoryModel> categorySelected =
-      ValueNotifier(CategoryModel(name: '', iconId: ''));
-  CategoryModel emptyCategoryData = CategoryModel(name: '', iconId: '');
+      ValueNotifier(CategoryModel(name: '', iconId: '', isFavorite: false));
+  CategoryModel emptyCategoryData =
+      CategoryModel(name: '', iconId: '', isFavorite: false);
   Account emptyAccountData =
       Account(accountName: "", id: null, userId: null, accountBalance: null);
   ValueNotifier<Account> accountSelected = ValueNotifier(

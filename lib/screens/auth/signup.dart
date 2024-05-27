@@ -56,8 +56,7 @@ class _SignupPageState extends State<SignupPage> {
       final response = await context.read<UserProvider>().singUpUser(user);
       if (response.statusCode == 201) {
         clearForm();
-        showToastification(
-            'TĐăng ký tài khoản thành công!', 'success', context);
+        showToastification('Đăng ký tài khoản thành công!', 'success', context);
         Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
           builder: (context) => LoginScreen(),
         ));

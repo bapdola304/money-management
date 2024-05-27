@@ -105,6 +105,12 @@ class _MainScreenState extends State<MainScreen> {
                         'Vui lòng tạo tài khoản để ghi thu chi!',
                         'warning',
                         context);
+                  } else {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const CreateExpend(),
+                      ),
+                    );
                   }
                 },
                 shape: RoundedRectangleBorder(
