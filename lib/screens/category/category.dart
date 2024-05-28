@@ -29,14 +29,18 @@ class _CreateCategoryState extends State<Category>
       ValueNotifier(IconModel(id: '', image: ''));
   final TextEditingController _categoryNameController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  late TabController _tabController = TabController(length: 2, vsync: this);
+  late final TabController _tabController =
+      TabController(length: 2, vsync: this);
   bool isEdit = false;
   late CategoryModel categorySelected =
       CategoryModel(name: '', iconId: '', isFavorite: false);
 
   void initState() {
     super.initState();
-    context.read<CategoryProvider>().getCategoryList();
+    if (context.read<CategoryProvider>().categoryList.isNotEmpty) return;
+    Future.delayed(Duration.zero, () async {
+      context.read<CategoryProvider>().getCategoryList();
+    });
   }
 
   onActionsPressed(BuildContext context, CategoryModel category) {
@@ -225,6 +229,13 @@ class _CreateCategoryState extends State<Category>
               color: Colors.white, fontWeight: FontWeight.w600, fontSize: 18),
         ),
         centerTitle: true,
+        actions: [
+          IconButton(
+              onPressed: () {
+                context.read<CategoryProvider>().getCategoryList();
+              },
+              icon: const Icon(Icons.refresh, color: Colors.white))
+        ],
       ),
       body: DefaultTabController(
         length: 2,

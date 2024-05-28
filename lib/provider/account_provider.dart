@@ -15,9 +15,9 @@ class AccountProvider extends ChangeNotifier {
   bool loading = false;
 
   Future<void> getAllAccounts(String userId) async {
-    loading = true;
+    setLoading(true);
     final response = await _service.getAll(userId);
-    loading = false;
+    setLoading(false);
     _accounts = response;
     if (!isEmptyData(_accountSelected)) {
       _accountSelected = _accounts.firstWhere(
@@ -28,7 +28,7 @@ class AccountProvider extends ChangeNotifier {
   }
 
   Future<int> getAccountCounts(String userId) async {
-    loading = true;
+    setLoading(true);
     final response = await _service.getAll(userId);
     loading = false;
     return response.length;
@@ -58,5 +58,12 @@ class AccountProvider extends ChangeNotifier {
   void setAccountSelected(Account account) {
     _accountSelected = account;
     notifyListeners();
+  }
+
+  setLoading(bool value) {
+    loading = value;
+    if (value) {
+      notifyListeners();
+    }
   }
 }

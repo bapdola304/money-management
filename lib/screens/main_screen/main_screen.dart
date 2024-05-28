@@ -54,6 +54,14 @@ class _MainScreenState extends State<MainScreen> {
     ];
   }
 
+  navigationToCreateExpend() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => const CreateExpend(isCreateFromBottomMenu: true),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -88,11 +96,7 @@ class _MainScreenState extends State<MainScreen> {
                 elevation: 0,
                 onPressed: () async {
                   if (accountProviderData.accounts.isNotEmpty) {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => const CreateExpend(),
-                      ),
-                    );
+                    navigationToCreateExpend();
                     return;
                   }
                   String userId =
@@ -106,21 +110,19 @@ class _MainScreenState extends State<MainScreen> {
                         'warning',
                         context);
                   } else {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => const CreateExpend(),
-                      ),
-                    );
+                    navigationToCreateExpend();
                   }
                 },
                 shape: RoundedRectangleBorder(
                   side: const BorderSide(width: 3, color: Colors.green),
                   borderRadius: BorderRadius.circular(100),
                 ),
-                child: const Icon(
-                  Icons.add,
-                  color: Colors.green,
-                ),
+                child: accountProviderData.loading
+                    ? const CircularProgressIndicator(color: Colors.green)
+                    : const Icon(
+                        Icons.add,
+                        color: Colors.green,
+                      ),
               ),
             ),
           ),

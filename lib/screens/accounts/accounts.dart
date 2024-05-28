@@ -29,7 +29,10 @@ class _AccountsState extends State<Accounts> {
   void initState() {
     super.initState();
     userId = sharedPrefService.getUserId() ?? "";
-    Provider.of<AccountProvider>(context, listen: false).getAllAccounts(userId);
+    if (context.read<AccountProvider>().accounts.isNotEmpty) return;
+    Future.delayed(Duration.zero, () async {
+      context.read<AccountProvider>().getAllAccounts(userId);
+    });
   }
 
   onActionsPressed(Account account) {
@@ -98,6 +101,13 @@ class _AccountsState extends State<Accounts> {
                 color: Colors.white, fontWeight: FontWeight.w600, fontSize: 18),
           ),
           centerTitle: true,
+          actions: [
+            IconButton(
+                onPressed: () {
+                  context.read<AccountProvider>().getAllAccounts(userId);
+                },
+                icon: const Icon(Icons.refresh, color: Colors.white))
+          ],
         ),
         body: Container(
             width: double.infinity,

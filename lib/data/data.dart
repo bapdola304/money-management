@@ -21,20 +21,34 @@ List<TransactionTypeSelect> transactionTypeList = [
 ];
 
 List<DateCategory> dateCategoryList = [
-  DateCategory(startDate: null, endDate: null, title: 'Tất cả'),
+  DateCategory(startDate: null, endDate: null, title: 'Tất cả', index: 0),
+  DateCategory(
+      startDate: formatStartDate(DateTime.now()),
+      endDate: formatEndDate(DateTime.now()),
+      title: 'Hôm nay',
+      index: 1),
   DateCategory(
       startDate:
-          DateTime.now().subtract(const Duration(days: 1)).toIso8601String(),
-      endDate: DateTime.now().toIso8601String(),
-      title: 'Hôm nay'),
+          formatStartDate(DateTime.now().subtract(const Duration(days: 7))),
+      endDate: formatEndDate(DateTime.now()),
+      title: '7 ngày qua',
+      index: 2),
   DateCategory(
       startDate:
-          DateTime.now().subtract(const Duration(days: 7)).toIso8601String(),
-      endDate: DateTime.now().toIso8601String(),
-      title: '7 ngày qua'),
-  DateCategory(
-      startDate:
-          DateTime.now().subtract(const Duration(days: 30)).toIso8601String(),
-      endDate: DateTime.now().toIso8601String(),
-      title: '30 ngày qua'),
+          formatStartDate(DateTime.now().subtract(const Duration(days: 30))),
+      endDate: formatEndDate(DateTime.now()),
+      title: '30 ngày qua',
+      index: 3),
 ];
+
+String formatEndDate(DateTime dateTime) {
+  DateTime dateTimeFormat =
+      DateTime(dateTime.year, dateTime.month, dateTime.day, 23, 59, 0);
+  return dateTimeFormat.toIso8601String();
+}
+
+String formatStartDate(DateTime dateTime) {
+  DateTime dateTimeFormat =
+      DateTime(dateTime.year, dateTime.month, dateTime.day, 00, 00, 0);
+  return dateTimeFormat.toIso8601String();
+}

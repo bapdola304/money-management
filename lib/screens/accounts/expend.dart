@@ -28,8 +28,13 @@ class _ExpendState extends State<Expend> {
   @override
   void initState() {
     super.initState();
-    Provider.of<ExpendProvider>(context, listen: false)
-        .getAllExpend(widget.accountId);
+    if (context.read<ExpendProvider>().accountIdExistsExpendList ==
+        widget.accountId) {
+      return;
+    }
+    Future.delayed(Duration.zero, () async {
+      context.read<ExpendProvider>().getAllExpend(widget.accountId);
+    });
   }
 
   renderExpendList(ExpendProvider expendProviderData) {
@@ -45,24 +50,32 @@ class _ExpendState extends State<Expend> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.green,
-        leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: const Icon(
-              Icons.arrow_back_ios_rounded,
-              color: Colors.white,
-            )),
-        title: Consumer<AccountProvider>(
-          builder: (context, accountProviderData, _) => Text(
-            accountProviderData.accountSelected.accountName,
-            style: const TextStyle(
-                color: Colors.white, fontWeight: FontWeight.w600, fontSize: 18),
+          backgroundColor: Colors.green,
+          leading: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: const Icon(
+                Icons.arrow_back_ios_rounded,
+                color: Colors.white,
+              )),
+          title: Consumer<AccountProvider>(
+            builder: (context, accountProviderData, _) => Text(
+              accountProviderData.accountSelected.accountName,
+              style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 18),
+            ),
           ),
-        ),
-        centerTitle: true,
-      ),
+          centerTitle: true,
+          actions: [
+            IconButton(
+                onPressed: () {
+                  context.read<ExpendProvider>().getAllExpend(widget.accountId);
+                },
+                icon: const Icon(Icons.refresh, color: Colors.white))
+          ]),
       body: Container(
         color: const Color(0xFFefeff2),
         child: Consumer<ExpendProvider>(

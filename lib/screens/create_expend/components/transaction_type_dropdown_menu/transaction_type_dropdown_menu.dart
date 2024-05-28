@@ -22,12 +22,6 @@ class TransactionTypeDropdownMenu extends StatefulWidget {
 class _TransactionTypeDropdownMenuState
     extends State<TransactionTypeDropdownMenu> {
   @override
-  void initState() {
-    super.initState();
-    context.read<CategoryProvider>().getCategoryList();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return MiraiDropDownMenu<TransactionTypeSelect>(
       key: UniqueKey(),

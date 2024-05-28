@@ -23,8 +23,11 @@ class _AccountDropdownMenuState extends State<AccountDropdownMenu> {
   @override
   void initState() {
     super.initState();
+    if (context.read<AccountProvider>().accounts.isNotEmpty) return;
     final userId = sharedPrefService.getUserId() ?? "";
-    context.read<AccountProvider>().getAllAccounts(userId);
+    Future.delayed(Duration.zero, () async {
+      context.read<AccountProvider>().getAllAccounts(userId);
+    });
   }
 
   @override

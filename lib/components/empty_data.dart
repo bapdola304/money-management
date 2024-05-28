@@ -8,6 +8,7 @@ class EmptyData extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         SvgPicture.asset('assets/icons/no_data.svg', width: 120),
         const SizedBox(height: 10),

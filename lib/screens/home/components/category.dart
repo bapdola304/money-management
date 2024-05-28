@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:money_management/data/data.dart';
+import 'package:money_management/model/home_date_category.dart';
 import 'package:money_management/provider/expend_provider.dart';
 import 'package:money_management/storage/locator.dart';
 import 'package:money_management/storage/user_storage.dart';
@@ -15,6 +16,30 @@ class _CategoryListState extends State<CategoryList> {
   // by default first item will be selected
   double kDefaultPadding = 20.0;
   int selectedIndex = 2;
+
+  @override
+  void initState() {
+    super.initState();
+    if (context.read<ExpendProvider>().categoryDateSelected.title.isNotEmpty) {
+      setState(() {
+        selectedIndex =
+            context.read<ExpendProvider>().categoryDateSelected.index ?? 2;
+      });
+    }
+    if (context.read<ExpendProvider>().expendListByDate.isNotEmpty) return;
+    DateCategory categoryDataSelected = dateCategoryList[selectedIndex];
+    String userId = serviceLocator<UserStorage>().getUserId() ?? "";
+    String startDate = categoryDataSelected.startDate!;
+    String endDate = categoryDataSelected.endDate!;
+    Future.delayed(Duration.zero, () async {
+      Provider.of<ExpendProvider>(context, listen: false)
+          .getExpendsByDate(startDate, endDate, userId);
+      context
+          .read<ExpendProvider>()
+          .setCategoryDateSelected(categoryDataSelected);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -28,9 +53,13 @@ class _CategoryListState extends State<CategoryList> {
             setState(() {
               selectedIndex = index;
             });
+            DateCategory categoryDataSelected = dateCategoryList[index];
             String userId = serviceLocator<UserStorage>().getUserId() ?? "";
-            String startDate = dateCategoryList[index].startDate ?? "";
-            String endDate = dateCategoryList[index].endDate ?? "";
+            String startDate = categoryDataSelected.startDate ?? "";
+            String endDate = categoryDataSelected.endDate ?? "";
+            context
+                .read<ExpendProvider>()
+                .setCategoryDateSelected(categoryDataSelected);
             Provider.of<ExpendProvider>(context, listen: false)
                 .getExpendsByDate(startDate, endDate, userId);
           },

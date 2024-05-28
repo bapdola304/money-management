@@ -5,6 +5,7 @@ import 'package:money_management/data/data.dart';
 import 'package:money_management/model/account.dart';
 import 'package:money_management/model/category.dart';
 import 'package:money_management/model/expend.dart';
+import 'package:money_management/model/home_date_category.dart';
 import 'package:money_management/provider/account_provider.dart';
 import 'package:money_management/provider/category_provider.dart';
 import 'package:money_management/provider/expend_provider.dart';
@@ -12,6 +13,7 @@ import 'package:money_management/screens/accounts/components/TypeSelect.dart';
 import 'package:money_management/screens/create_expend/components/account_dropdown_menu/account_dropdown_menu.dart';
 import 'package:money_management/screens/create_expend/components/favorite_list.dart';
 import 'package:money_management/screens/create_expend/components/transaction_type_dropdown_menu/transaction_type_dropdown_menu.dart';
+import 'package:money_management/skeletons/skeleton_category_expend.dart';
 import 'package:money_management/storage/locator.dart';
 import 'package:money_management/storage/user_storage.dart';
 import 'package:money_management/utils/currence_format.dart';
@@ -24,9 +26,11 @@ import 'package:money_management/components/button.dart';
 import 'package:money_management/components/show_toastification.dart';
 
 class CreateExpend extends StatefulWidget {
-  const CreateExpend({Key? key, this.expendSelected}) : super(key: key);
+  const CreateExpend(
+      {Key? key, this.expendSelected, this.isCreateFromBottomMenu})
+      : super(key: key);
   final ExpendModel? expendSelected;
-
+  final bool? isCreateFromBottomMenu;
   @override
   _CreateExpendState createState() => _CreateExpendState();
 }
@@ -87,9 +91,18 @@ class _CreateExpendState extends State<CreateExpend> {
 
   void actionSuccess(String text, Account account) {
     showToastification(text, 'success', context);
+    getExpendListByDate();
     context.read<ExpendProvider>().getAllExpend(account.id ?? "");
     context.read<AccountProvider>().setAccountSelected(account);
     Navigator.pop(context);
+  }
+
+  void getExpendListByDate() {
+    DateCategory categoryDateSelected =
+        context.read<ExpendProvider>().categoryDateSelected;
+    String userId = serviceLocator<UserStorage>().getUserId() ?? "";
+    Provider.of<ExpendProvider>(context, listen: false).getExpendsByDate(
+        categoryDateSelected.startDate, categoryDateSelected.endDate, userId);
   }
 
   String? getAccountId() {
@@ -223,16 +236,21 @@ class _CreateExpendState extends State<CreateExpend> {
                   ),
                 ),
                 Consumer<CategoryProvider>(
-                  builder: (context, categoryProvider, child) => FavoriteList(
-                    categoryList: categoryProvider.categoryList,
-                    categorySelected: getCategorySelected(categoryProvider),
-                    transactionTypeSelect: transactionTypeSelected.value,
-                    onItemClicked: (category) {
-                      setState(() {
-                        categorySelected.value = category;
-                      });
-                    },
-                  ),
+                  builder: (context, categoryProvider, child) =>
+                      categoryProvider.loading
+                          ? const SkeletonCategoryExpend()
+                          : FavoriteList(
+                              categoryList: categoryProvider.categoryList,
+                              categorySelected:
+                                  getCategorySelected(categoryProvider),
+                              transactionTypeSelect:
+                                  transactionTypeSelected.value,
+                              onItemClicked: (category) {
+                                setState(() {
+                                  categorySelected.value = category;
+                                });
+                              },
+                            ),
                 ),
                 const SizedBox(height: 20),
                 TextFieldCustom(

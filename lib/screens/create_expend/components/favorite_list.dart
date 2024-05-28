@@ -93,7 +93,7 @@ class _FavoriteListState extends State<FavoriteList> {
                       child: Text(categoryFavoriteList[index].name ?? "",
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontSize: 12, fontWeight: FontWeight.w400)),
                     ),
                   ),

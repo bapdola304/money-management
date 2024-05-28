@@ -35,9 +35,9 @@ class CategoryProvider extends ChangeNotifier {
   }
 
   Future<void> getCategoryList() async {
-    loading = true;
+    setLoading(true);
     final response = await _service.getCategoryList();
-    loading = false;
+    setLoading(false);
     _categoryList = response;
     if (_categoryIdSelected != '') {
       _categorySelected =
@@ -72,5 +72,12 @@ class CategoryProvider extends ChangeNotifier {
   void setCategoryIdSelected(String categoryId) {
     _categoryIdSelected = categoryId;
     notifyListeners();
+  }
+
+  setLoading(bool value) {
+    loading = value;
+    if (value) {
+      notifyListeners();
+    }
   }
 }

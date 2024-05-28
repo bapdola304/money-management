@@ -8,7 +8,7 @@ class SkeletonHomeBoard extends StatelessWidget {
   Widget build(BuildContext context) {
     return const SkeletonContainer.rounded(
       width: 120,
-      height: 22,
+      height: 29,
     );
   }
 }
