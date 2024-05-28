@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:money_management/model/expend.dart';
 import 'package:money_management/model/home_date_category.dart';
+import 'package:money_management/provider/disposable_provider.dart';
 import 'package:money_management/services/expend_service.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
-class ExpendProvider extends ChangeNotifier {
+class ExpendProvider extends DisposableProvider {
   BuildContext context;
   ExpendProvider(this.context);
   final _service = ExpendService();
@@ -73,5 +74,13 @@ class ExpendProvider extends ChangeNotifier {
 
   void setAccountIdExistsExpendList(String value) {
     _accountIdExistsExpendList = value;
+  }
+
+  @override
+  void disposeValues() {
+    _expendList = [];
+    _expendListByDate = [];
+    _categoryDateSelected = DateCategory(title: '');
+    _accountIdExistsExpendList = '';
   }
 }

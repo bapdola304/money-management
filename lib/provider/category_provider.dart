@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:money_management/model/category.dart';
 import 'package:money_management/model/icon.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:money_management/provider/disposable_provider.dart';
 import 'package:money_management/services/category_service.dart';
 
-class CategoryProvider extends ChangeNotifier {
+class CategoryProvider extends DisposableProvider {
   BuildContext context;
   CategoryProvider(this.context);
   final _service = CategoryService();
@@ -79,5 +80,14 @@ class CategoryProvider extends ChangeNotifier {
     if (value) {
       notifyListeners();
     }
+  }
+
+  @override
+  void disposeValues() {
+    _icons = [];
+    _categoryList = [];
+    _categoryIdSelected = '';
+    _categorySelected =
+        CategoryModel(name: '', id: '', iconId: '', isFavorite: false);
   }
 }

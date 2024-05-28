@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:money_management/provider/account_provider.dart';
+import 'package:money_management/provider/app_provider.dart';
 import 'package:money_management/screens/auth/login.dart';
 import 'package:money_management/storage/locator.dart';
 import 'package:money_management/storage/user_storage.dart';
@@ -109,6 +110,7 @@ class _ProfileState extends State<Profile> {
             InkWell(
               onTap: () {
                 sharedPrefService.clearUserData();
+                AppProviders.disposeAllDisposableProviders(context);
                 Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
                     MaterialPageRoute(builder: (context) => LoginScreen()),
                     (route) => false);

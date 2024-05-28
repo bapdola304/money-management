@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:money_management/model/account.dart';
+import 'package:money_management/provider/disposable_provider.dart';
 import 'package:money_management/services/account_service.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:money_management/utils/data_utils.dart';
 
-class AccountProvider extends ChangeNotifier {
+class AccountProvider extends DisposableProvider {
   BuildContext context;
   AccountProvider(this.context);
   final _service = AccountService();
@@ -65,5 +66,11 @@ class AccountProvider extends ChangeNotifier {
     if (value) {
       notifyListeners();
     }
+  }
+
+  @override
+  void disposeValues() {
+    _accounts = [];
+    _accountSelected = Account(accountName: '', id: '');
   }
 }
