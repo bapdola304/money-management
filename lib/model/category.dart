@@ -21,7 +21,7 @@ class CategoryModel {
       id: map['id'],
       name: map['name'] != null ? map['name'] : "",
       iconId: map['iconId'] != null ? map['iconId'] : "",
-      isFavorite: map['name'] != null ? map['isFavorite'] : false,
+      isFavorite: map['isFavorite'] != null ? map['isFavorite'] : false,
       icon: map['icon'] != null ? IconModel.fromMap(map['icon']) : null,
       transactionType: map['transactionType'] ?? "",
     );

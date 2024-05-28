@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:money_management/data/data.dart';
+import 'package:money_management/provider/expend_provider.dart';
+import 'package:money_management/storage/locator.dart';
+import 'package:money_management/storage/user_storage.dart';
+import 'package:provider/provider.dart';
 
 // We need statefull widget because we are gonna change some state on our category
 class CategoryList extends StatefulWidget {
@@ -9,8 +14,7 @@ class CategoryList extends StatefulWidget {
 class _CategoryListState extends State<CategoryList> {
   // by default first item will be selected
   double kDefaultPadding = 20.0;
-  int selectedIndex = 1;
-  List categories = ['Tất cả', 'Hôm nay', 'Tuần trước', 'Tháng này'];
+  int selectedIndex = 2;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -18,19 +22,24 @@ class _CategoryListState extends State<CategoryList> {
       height: 40,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: categories.length,
+        itemCount: dateCategoryList.length,
         itemBuilder: (context, index) => GestureDetector(
           onTap: () {
             setState(() {
               selectedIndex = index;
             });
+            String userId = serviceLocator<UserStorage>().getUserId() ?? "";
+            String startDate = dateCategoryList[index].startDate ?? "";
+            String endDate = dateCategoryList[index].endDate ?? "";
+            Provider.of<ExpendProvider>(context, listen: false)
+                .getExpendsByDate(startDate, endDate, userId);
           },
           child: Container(
             alignment: Alignment.center,
             margin: EdgeInsets.only(
               left: kDefaultPadding / 2,
               // At end item it add extra 20 right  padding
-              right: index == categories.length - 1 ? kDefaultPadding : 0,
+              right: index == dateCategoryList.length - 1 ? kDefaultPadding : 0,
             ),
             padding: EdgeInsets.symmetric(horizontal: kDefaultPadding),
             decoration: BoxDecoration(
@@ -41,7 +50,7 @@ class _CategoryListState extends State<CategoryList> {
                       index == selectedIndex ? Colors.green : Colors.black26),
             ),
             child: Text(
-              categories[index],
+              dateCategoryList[index].title,
               style: TextStyle(
                   color: index == selectedIndex ? Colors.white : Colors.black),
             ),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:money_management/components/base64_image_widget.dart';
 import 'package:money_management/model/category.dart';
-import 'package:money_management/utils/data_utils.dart';
 
 class CategoryTabList extends StatelessWidget {
   const CategoryTabList(
@@ -59,7 +58,7 @@ class CategoryTabList extends StatelessWidget {
                     child: Text(categoryList[index].name ?? "",
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 13, fontWeight: FontWeight.w500)),
                   ),
                 ],

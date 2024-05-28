@@ -9,6 +9,8 @@ class ExpendProvider extends ChangeNotifier {
   final _service = ExpendService();
   List<ExpendModel> _expendList = [];
   List<ExpendModel> get expendList => _expendList;
+  List<ExpendModel> _expendListByDate = [];
+  List<ExpendModel> get expendListByDate => _expendListByDate;
   bool loading = false;
 
   Future<List<ExpendModel>> getAllExpend(String accountId) async {
@@ -16,6 +18,17 @@ class ExpendProvider extends ChangeNotifier {
     final response = await _service.getAll(accountId);
     loading = false;
     _expendList = response;
+    notifyListeners();
+    return response;
+  }
+
+  Future<List<ExpendModel>> getExpendsByDate(
+      String? startDate, String? endDate, String userId) async {
+    setLoading(true);
+    final response =
+        await _service.getExpendsByDate(startDate, endDate, userId);
+    loading = false;
+    _expendListByDate = response;
     notifyListeners();
     return response;
   }
@@ -39,5 +52,12 @@ class ExpendProvider extends ChangeNotifier {
     final response = await _service.updateExpend(expendId, body);
     EasyLoading.dismiss();
     return response;
+  }
+
+  setLoading(bool value) {
+    loading = value;
+    if (value) {
+      notifyListeners();
+    }
   }
 }

@@ -1,15 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:money_management/components/base64_image_widget.dart';
+import 'package:money_management/model/expend.dart';
+import 'package:money_management/utils/currence_format.dart';
+import 'package:money_management/utils/date_format.dart';
+import 'package:money_management/utils/enum.dart';
 
 class ExpendHistory extends StatelessWidget {
   const ExpendHistory({
     super.key,
+    required this.expendList,
   });
+
+  final List<ExpendModel> expendList;
 
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      itemCount: 10,
+      itemCount: expendList.length,
       itemBuilder: (context, index) => Container(
         padding: const EdgeInsets.all(20),
         margin: const EdgeInsets.only(top: 10),
@@ -20,34 +27,38 @@ class ExpendHistory extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            SvgPicture.asset(
-              'assets/icons/category_icon.svg',
+            Base64ImageWidget(
+              base64String: expendList[index].category?.icon?.image,
               width: 40,
             ),
             const SizedBox(width: 16.0),
-            const Expanded(
+            Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Dòng text thứ nhất có rất nhiều chữ',
+                  Text(expendList[index].category?.name ?? "",
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                  Text('Tháng 1, 2022, 10:00 AM',
+                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                  Text(
+                      displayDate(expendList[index].dateTime?.toUtc()) +
+                          " - " +
+                          formatDateTime(expendList[index].dateTime!),
                       style: TextStyle(fontSize: 12, color: Colors.black54))
                 ],
               ),
             ),
             const SizedBox(width: 8),
-            const Text(
-              '\$ 500.00đ',
-              textAlign: TextAlign.center,
+            Text(
+              formatCurrency(expendList[index].amount, true),
               style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.black,
-                  fontWeight: FontWeight.w600),
-            ),
+                  fontSize: 16,
+                  color: expendList[index].transactionType ==
+                          TransactionType.income.toString()
+                      ? Colors.green[400]
+                      : Colors.red[400]),
+            )
           ],
         ),
       ),

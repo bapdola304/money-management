@@ -13,7 +13,12 @@ String formatDateTime(DateTime date) {
 
 String displayDate(dynamic date) {
   DateTime now = DateTime.now();
-  DateTime dateTime = _parseDateTime(date);
+  DateTime dateTime;
+  if (date is DateTime) {
+    dateTime = date;
+  } else {
+    dateTime = _parseDateTime(date);
+  }
 
   DateTime nowDateOnly = DateTime(now.year, now.month, now.day);
   DateTime dateTimeDateOnly =

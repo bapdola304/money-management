@@ -20,8 +20,7 @@ class TransactionTypeItem extends StatelessWidget {
         const SizedBox(width: 10),
         Text(
           item!.name,
-          style: TextStyle(
-              fontSize: 16, color: false ? Colors.white : Colors.black),
+          style: TextStyle(fontSize: 16, color: Colors.black),
         )
       ]),
     );

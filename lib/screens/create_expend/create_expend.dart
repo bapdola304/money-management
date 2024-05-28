@@ -12,6 +12,8 @@ import 'package:money_management/screens/accounts/components/TypeSelect.dart';
 import 'package:money_management/screens/create_expend/components/account_dropdown_menu/account_dropdown_menu.dart';
 import 'package:money_management/screens/create_expend/components/favorite_list.dart';
 import 'package:money_management/screens/create_expend/components/transaction_type_dropdown_menu/transaction_type_dropdown_menu.dart';
+import 'package:money_management/storage/locator.dart';
+import 'package:money_management/storage/user_storage.dart';
 import 'package:money_management/utils/currence_format.dart';
 import 'package:money_management/utils/data_utils.dart';
 import 'package:money_management/utils/enum.dart';
@@ -106,6 +108,7 @@ class _CreateExpendState extends State<CreateExpend> {
     AccountProvider accountProviderData =
         Provider.of<AccountProvider>(context, listen: false);
     Account account = getAccountSelected(accountProviderData);
+    String userId = serviceLocator<UserStorage>().getUserId() ?? "";
     ExpendRequestModel expendRequest = ExpendRequestModel(
         accountId: account.id ?? "",
         amount: parseCurrency(_amountController.text),
@@ -113,6 +116,7 @@ class _CreateExpendState extends State<CreateExpend> {
         dateTime: selectedDate,
         id: widget.expendSelected?.id,
         transactionType: transactionTypeSelected.value.value,
+        userId: userId,
         description: _desController.text);
 
     if (isEdit) {

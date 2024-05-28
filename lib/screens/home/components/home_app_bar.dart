@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:money_management/storage/locator.dart';
+import 'package:money_management/storage/user_storage.dart';
 import 'package:money_management/utils/date_format.dart';
 
 class HomeAppBar extends StatelessWidget {
@@ -9,6 +11,7 @@ class HomeAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String fullName = serviceLocator<UserStorage>().getFullName() ?? "";
     String date = getCurrentDateTime();
     return Container(
       color: const Color(0xFFefeff2),
@@ -20,8 +23,8 @@ class HomeAppBar extends StatelessWidget {
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Xin chào, H2 Family',
+            Text(
+              'Xin chào, $fullName',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
             ),
             Text('Hôm nay, $date',

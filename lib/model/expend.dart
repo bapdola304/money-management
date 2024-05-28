@@ -1,8 +1,7 @@
 import 'package:money_management/model/category.dart';
-import 'dart:convert';
 
 class ExpendModel {
-  final String accountId;
+  final String? accountId;
   final int? amount;
   final String? description;
   final String? id;
@@ -60,6 +59,7 @@ class ExpendRequestModel {
   final DateTime? dateTime;
   final String? transactionType;
   final String? id;
+  final String? userId;
 
   ExpendRequestModel(
       {required this.accountId,
@@ -68,6 +68,7 @@ class ExpendRequestModel {
       this.categoryId,
       this.dateTime,
       this.id,
+      this.userId,
       this.transactionType});
 
   Map<String, dynamic> toJson() {
@@ -77,7 +78,8 @@ class ExpendRequestModel {
       'description': description,
       'categoryId': categoryId,
       'dateTime': dateTime?.toIso8601String(),
-      'transactionType': transactionType
+      'transactionType': transactionType,
+      'userId': userId
     };
   }
 

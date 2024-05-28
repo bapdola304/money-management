@@ -2,12 +2,34 @@ import 'dart:convert';
 import 'package:money_management/model/expend.dart';
 import 'package:money_management/services/request.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:money_management/utils/data_utils.dart';
 
 class ExpendService {
   Request request = Request();
   Future<List<ExpendModel>> getAll(String accountId) async {
     final url =
         '/expend?select=*,category(id,name, icon(image))&accountId=eq.$accountId&order=dateTime.desc';
+    final response = await request.get(url);
+    if (response.statusCode == 200) {
+      final json = jsonDecode(response.body) as List;
+      return json
+          .map(
+            (expend) => ExpendModel.fromJson(expend),
+          )
+          .toList();
+    }
+    final json = jsonDecode(response.body);
+    EasyLoading.showError('Có lỗi xảy ra: ${json['message']}',
+        maskType: EasyLoadingMaskType.clear,
+        duration: const Duration(seconds: 5));
+    return [];
+  }
+
+  Future<List<ExpendModel>> getExpendsByDate(
+      String? startDate, String? endDate, String userId) async {
+    final url = isEmptyData(startDate)
+        ? '/expend?select=amount,transactionType,dateTime, category(id,name, icon(image))&userId=eq.$userId&order=dateTime.desc'
+        : '/expend?select=amount,transactionType,dateTime, category(id,name, icon(image))&userId=eq.$userId&dateTime=gte.$startDate&dateTime=lte.$endDate&order=dateTime.desc';
     final response = await request.get(url);
     if (response.statusCode == 200) {
       final json = jsonDecode(response.body) as List;
