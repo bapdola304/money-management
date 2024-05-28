@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:money_management/utils/currence_format.dart';
+import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
+import 'package:pattern_formatter/pattern_formatter.dart';
 
-class CurrencyInput extends StatefulWidget {
+class CurrencyInput extends StatelessWidget {
   const CurrencyInput(
       {super.key,
       TextEditingController? controller,
@@ -15,50 +16,21 @@ class CurrencyInput extends StatefulWidget {
   final MaterialColor? numberColor;
 
   @override
-  State<CurrencyInput> createState() => _CurrencyInputState();
-}
-
-class _CurrencyInputState extends State<CurrencyInput> {
-  final FocusNode _focusNode = FocusNode();
-
-  @override
-  void initState() {
-    super.initState();
-    _focusNode.addListener(() {
-      if (_focusNode.hasFocus) {
-        // Move cursor to the beginning
-        setState(() {
-          widget._controller?.selection = TextSelection.fromPosition(
-            TextPosition(offset: 1),
-          );
-        });
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _focusNode.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-      Text(widget.text),
+      Text(text),
       Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           SizedBox(
             width: size.width * 0.7,
             child: TextField(
-                controller: widget._controller,
-                focusNode: _focusNode,
+                controller: _controller,
                 style: TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
-                    color: widget.numberColor),
+                    color: numberColor),
                 textAlign: TextAlign.end,
                 decoration: const InputDecoration(
                   border: UnderlineInputBorder(),
@@ -68,15 +40,10 @@ class _CurrencyInputState extends State<CurrencyInput> {
                 inputFormatters: [
                   FilteringTextInputFormatter.digitsOnly,
                   new LengthLimitingTextInputFormatter(13),
+                  ThousandsFormatter(
+                      formatter: NumberFormat.decimalPattern('vi_VN'))
                 ],
-                onChanged: (value) {
-                  String formattedValue = formatCurrency(value);
-                  widget._controller?.value = TextEditingValue(
-                    text: formattedValue,
-                    selection:
-                        TextSelection.collapsed(offset: formattedValue.length),
-                  );
-                }),
+                onChanged: (value) {}),
           ),
           const SizedBox(width: 8),
           const Text(
