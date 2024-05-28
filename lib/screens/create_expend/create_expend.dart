@@ -138,7 +138,7 @@ class _CreateExpendState extends State<CreateExpend> {
           .updateExpend(widget.expendSelected?.id ?? "", expendRequest)
           .then((response) {
         if (response.statusCode == 204) {
-          actionSuccess('Sửa bản ghi thành lại!', account);
+          actionSuccess('Sửa bản ghi thành công!', account);
         }
       });
       return;
