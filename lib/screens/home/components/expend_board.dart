@@ -3,7 +3,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:money_management/model/expend.dart';
 import 'package:money_management/skeletons/skeleton_home_board.dart';
 import 'package:money_management/utils/currence_format.dart';
-import 'package:money_management/utils/data_utils.dart';
 
 class ExpendBoard extends StatelessWidget {
   const ExpendBoard({

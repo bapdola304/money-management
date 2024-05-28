@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class LoadingOverlay extends StatefulWidget {
   const LoadingOverlay({Key? key, required this.child}) : super(key: key);

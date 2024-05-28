@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:money_management/provider/account_provider.dart';
 import 'package:money_management/provider/app_provider.dart';
 import 'package:money_management/screens/auth/login.dart';
 import 'package:money_management/storage/locator.dart';

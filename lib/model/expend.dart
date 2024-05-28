@@ -1,3 +1,4 @@
+import 'package:money_management/model/account.dart';
 import 'package:money_management/model/category.dart';
 
 class ExpendModel {
@@ -9,6 +10,7 @@ class ExpendModel {
   final DateTime? dateTime;
   final CategoryModel? category;
   final String? transactionType;
+  final Account? account;
 
   ExpendModel(
       {required this.accountId,
@@ -18,6 +20,7 @@ class ExpendModel {
       this.categoryId,
       this.dateTime,
       this.transactionType,
+      this.account,
       this.category});
 
   // Phương thức để chuyển đổi từ JSON thành đối tượng ExpendModel
@@ -31,6 +34,8 @@ class ExpendModel {
         category: json['category'] != null
             ? CategoryModel.fromMap(json['category'])
             : null,
+        account:
+            json['account'] != null ? Account.fromMap(json['account']) : null,
         dateTime:
             json['dateTime'] != null ? DateTime.parse(json['dateTime']) : null,
         transactionType: json['transactionType']);

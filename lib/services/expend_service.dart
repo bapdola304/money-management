@@ -28,8 +28,8 @@ class ExpendService {
   Future<List<ExpendModel>> getExpendsByDate(
       String? startDate, String? endDate, String userId) async {
     final url = isEmptyData(startDate)
-        ? '/expend?select=amount,transactionType,dateTime, category(id,name, icon(image))&userId=eq.$userId&order=dateTime.desc'
-        : '/expend?select=amount,transactionType,dateTime, category(id,name, icon(image))&userId=eq.$userId&dateTime=gte.$startDate&dateTime=lte.$endDate&order=dateTime.desc';
+        ? '/expend?select=amount,transactionType,dateTime,id, category(id,name, icon(image)), account(*)&userId=eq.$userId&order=dateTime.desc'
+        : '/expend?select=amount,transactionType,dateTime,id, category(id,name, icon(image)), account(*)&userId=eq.$userId&dateTime=gte.$startDate&dateTime=lte.$endDate&order=dateTime.desc';
     final response = await request.get(url);
     if (response.statusCode == 200) {
       final json = jsonDecode(response.body) as List;

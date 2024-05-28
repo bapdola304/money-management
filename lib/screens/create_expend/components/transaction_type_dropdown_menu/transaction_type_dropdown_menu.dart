@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:money_management/data/data.dart';
-import 'package:money_management/provider/category_provider.dart';
 import 'package:mirai_dropdown_menu/mirai_dropdown_menu.dart';
 import 'package:money_management/screens/create_expend/components/transaction_type_dropdown_menu/transaction_type_children.dart';
 import 'package:money_management/screens/create_expend/components/transaction_type_dropdown_menu/transaction_type_item.dart';
-import 'package:provider/provider.dart';
 
 class TransactionTypeDropdownMenu extends StatefulWidget {
   final Function(TransactionTypeSelect category) onChanged;
