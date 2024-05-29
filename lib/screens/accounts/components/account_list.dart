@@ -18,7 +18,7 @@ class AccountList extends StatefulWidget {
 
 class _AccountListState extends State<AccountList> {
   ScrollController _scrollController = ScrollController();
-  int pageSize = 8;
+  int pageSize = 10;
   int pageNumber = 2;
 
   @override
