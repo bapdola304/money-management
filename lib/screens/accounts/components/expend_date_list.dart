@@ -4,7 +4,7 @@ import 'package:money_management/utils/currence_format.dart';
 import 'package:money_management/utils/data_utils.dart';
 import 'package:money_management/utils/date_format.dart';
 
-class ExpendDateList extends StatelessWidget {
+class ExpendDateList extends StatefulWidget {
   const ExpendDateList(
       {Key? key, required this.expendListGroupByDate, required this.accountId})
       : super(key: key);
@@ -12,9 +12,43 @@ class ExpendDateList extends StatelessWidget {
   final String accountId;
 
   @override
+  State<ExpendDateList> createState() => _ExpendDateListState();
+}
+
+class _ExpendDateListState extends State<ExpendDateList> {
+  ScrollController _scrollController = ScrollController();
+  int pageSize = 5;
+  int pageNumber = 2;
+
+  @override
+  void initState() {
+    _scrollController.addListener(() {
+      int offset = (pageNumber - 1) * pageSize;
+      if (_scrollController.position.pixels ==
+              _scrollController.position.maxScrollExtent &&
+          offset <= widget.expendListGroupByDate.length) {
+        setState(() {
+          pageNumber++;
+        });
+      }
+    });
+    super.initState();
+  }
+
+  List<Map<String, dynamic>> subExpendList(int currentPage) {
+    int offset = (currentPage - 1) * pageSize;
+    return (widget.expendListGroupByDate.length < pageSize ||
+            offset > widget.expendListGroupByDate.length)
+        ? widget.expendListGroupByDate
+        : widget.expendListGroupByDate.sublist(0, offset);
+  }
+
+  @override
   Widget build(BuildContext context) {
+    List<Map<String, dynamic>> expendListSub = subExpendList(pageNumber);
     return ListView.builder(
-      itemCount: expendListGroupByDate.length,
+      itemCount: expendListSub.length,
+      controller: _scrollController,
       shrinkWrap: true,
       itemBuilder: (context, index) => Container(
         margin: const EdgeInsets.only(top: 10),
@@ -40,7 +74,7 @@ class ExpendDateList extends StatelessWidget {
                           Row(
                             children: [
                               Text(
-                                expendListGroupByDate[index]['date']['day'],
+                                expendListSub[index]['date']['day'],
                                 style: const TextStyle(
                                     fontSize: 30, fontWeight: FontWeight.w600),
                               ),
@@ -48,15 +82,13 @@ class ExpendDateList extends StatelessWidget {
                               Column(
                                 children: [
                                   Text(
-                                    displayDate(
-                                        expendListGroupByDate[index]['date']),
+                                    displayDate(expendListSub[index]['date']),
                                     style: const TextStyle(
                                         fontSize: 18,
                                         fontWeight: FontWeight.w500),
                                   ),
                                   Text(
-                                    expendListGroupByDate[index]['date']
-                                        ['month_year'],
+                                    expendListSub[index]['date']['month_year'],
                                     style: const TextStyle(
                                         fontSize: 16, color: Colors.black54),
                                   )
@@ -67,24 +99,20 @@ class ExpendDateList extends StatelessWidget {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
-                              !isEmptyData(expendListGroupByDate[index]
-                                      ['totalIncome'])
+                              !isEmptyData(expendListSub[index]['totalIncome'])
                                   ? Text(
                                       formatCurrency(
-                                          expendListGroupByDate[index]
-                                              ['totalIncome'],
+                                          expendListSub[index]['totalIncome'],
                                           true),
                                       style: TextStyle(
                                           fontSize: 20,
                                           color: Colors.green[400]),
                                     )
                                   : Container(),
-                              !isEmptyData(expendListGroupByDate[index]
-                                      ['totalExpense'])
+                              !isEmptyData(expendListSub[index]['totalExpense'])
                                   ? Text(
                                       formatCurrency(
-                                          expendListGroupByDate[index]
-                                              ['totalExpense'],
+                                          expendListSub[index]['totalExpense'],
                                           true),
                                       style: TextStyle(
                                           fontSize: 20, color: Colors.red[400]),
@@ -110,8 +138,8 @@ class ExpendDateList extends StatelessWidget {
             ],
           ),
           ExpendCategoryList(
-            accountId: accountId,
-            expendListGroupByCategory: expendListGroupByDate[index]['items'],
+            accountId: widget.accountId,
+            expendListGroupByCategory: expendListSub[index]['items'],
           )
         ]),
       ),

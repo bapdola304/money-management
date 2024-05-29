@@ -12,7 +12,7 @@ class SkeletonExpend extends StatelessWidget {
         Container(
           color: Colors.white,
           width: screenWidth,
-          height: 50,
+          height: 55,
           child: Center(
             child: SkeletonContainer.rounded(
               height: 20,

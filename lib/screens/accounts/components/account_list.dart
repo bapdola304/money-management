@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:money_management/model/account.dart';
 import 'package:money_management/utils/currence_format.dart';
 
-class AccountList extends StatelessWidget {
+class AccountList extends StatefulWidget {
   final Function(Account account)? onActionsPressed;
   final Function(Account account)? onItemClicked;
   final List<Account> accountList;
@@ -13,11 +13,45 @@ class AccountList extends StatelessWidget {
       required this.accountList});
 
   @override
+  State<AccountList> createState() => _AccountListState();
+}
+
+class _AccountListState extends State<AccountList> {
+  ScrollController _scrollController = ScrollController();
+  int pageSize = 8;
+  int pageNumber = 2;
+
+  @override
+  void initState() {
+    _scrollController.addListener(() {
+      int offset = (pageNumber - 1) * pageSize;
+      if (_scrollController.position.pixels ==
+              _scrollController.position.maxScrollExtent &&
+          offset <= widget.accountList.length) {
+        setState(() {
+          pageNumber++;
+        });
+      }
+    });
+    super.initState();
+  }
+
+  List<Account> subAccountList(int currentPage) {
+    int offset = (currentPage - 1) * pageSize;
+    return (widget.accountList.length < pageSize ||
+            offset > widget.accountList.length)
+        ? widget.accountList
+        : widget.accountList.sublist(0, offset);
+  }
+
+  @override
   Widget build(BuildContext context) {
+    List<Account> accountListSub = subAccountList(pageNumber);
     return ListView.builder(
-      itemCount: accountList.length,
+      itemCount: accountListSub.length,
+      controller: _scrollController,
       itemBuilder: (context, index) => InkWell(
-        onTap: () => onItemClicked!(accountList[index]),
+        onTap: () => widget.onItemClicked!(accountListSub[index]),
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 8),
           margin: const EdgeInsets.only(top: 10),
@@ -51,13 +85,14 @@ class AccountList extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(accountList[index].accountName,
+                    Text(accountListSub[index].accountName,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold)),
                     Text(
-                        formatCurrency(accountList[index].accountBalance, true),
+                        formatCurrency(
+                            accountListSub[index].accountBalance, true),
                         style: const TextStyle(
                             fontSize: 14, color: Colors.black87))
                   ],
@@ -65,7 +100,8 @@ class AccountList extends StatelessWidget {
               ),
               const SizedBox(width: 8),
               IconButton(
-                  onPressed: () => onActionsPressed!(accountList[index]),
+                  onPressed: () =>
+                      widget.onActionsPressed!(accountListSub[index]),
                   icon: const Icon(Icons.more_vert, color: Colors.black)),
             ],
           ),

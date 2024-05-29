@@ -25,6 +25,7 @@ class _MainScreenState extends State<MainScreen> {
   final notificationNavKey = GlobalKey<NavigatorState>();
   final profileNavKey = GlobalKey<NavigatorState>();
   int selectedTab = 0;
+  bool isClickedCreateExpend = false;
   List<NavModel> items = [];
 
   @override
@@ -60,6 +61,12 @@ class _MainScreenState extends State<MainScreen> {
         builder: (context) => const CreateExpend(isCreateFromBottomMenu: true),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    isClickedCreateExpend = false;
   }
 
   @override
@@ -99,6 +106,7 @@ class _MainScreenState extends State<MainScreen> {
                     navigationToCreateExpend();
                     return;
                   }
+                  isClickedCreateExpend = true;
                   String userId =
                       serviceLocator<UserStorage>().getUserId() ?? "";
                   int counts =
@@ -117,7 +125,7 @@ class _MainScreenState extends State<MainScreen> {
                   side: const BorderSide(width: 3, color: Colors.green),
                   borderRadius: BorderRadius.circular(100),
                 ),
-                child: accountProviderData.loading
+                child: accountProviderData.loading && isClickedCreateExpend
                     ? const CircularProgressIndicator(color: Colors.green)
                     : const Icon(
                         Icons.add,
