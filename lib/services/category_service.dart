@@ -1,13 +1,15 @@
 import 'dart:convert';
 import 'package:money_management/model/category.dart';
 import 'package:money_management/model/icon.dart';
+import 'package:money_management/services/api_routes.dart';
 import 'package:money_management/services/request.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:money_management/utils/data_utils.dart';
 
 class CategoryService {
   Request request = Request();
   Future<List<IconModel>> getIcons() async {
-    const url = '/icon';
+    const url = ApiRoutes.icon;
     final response = await request.get(url);
     if (response.statusCode == 200) {
       final json = jsonDecode(response.body) as List;
@@ -22,7 +24,7 @@ class CategoryService {
   }
 
   Future<dynamic> createCategory(CategoryRequestModel body) async {
-    const url = '/category';
+    const url = ApiRoutes.category;
     final response = await request.post(url, body);
     if (response.statusCode == 201) {
       return response;
@@ -36,7 +38,8 @@ class CategoryService {
   }
 
   Future<List<CategoryModel>> getCategoryList() async {
-    const url = '/category?select=*,icon(id, image)';
+    final Map<String, String> params = {'select': '*,icon(id, image)'};
+    final url = generateUrlFromParams(ApiRoutes.category, params);
     final response = await request.get(url);
     if (response.statusCode == 200) {
       final json = jsonDecode(response.body) as List;
@@ -51,7 +54,8 @@ class CategoryService {
   }
 
   Future<dynamic> deleteCategory(String categoryId) async {
-    final url = '/category?id=eq.$categoryId';
+    final Map<String, String> params = {'id': 'eq.$categoryId'};
+    final url = generateUrlFromParams(ApiRoutes.category, params);
     final response = await request.delete(url);
     if (response.statusCode == 204) {
       return response;
@@ -66,7 +70,8 @@ class CategoryService {
 
   Future<dynamic> updateCategory(
       String categoryId, CategoryRequestModel body) async {
-    final url = '/category?id=eq.$categoryId';
+    final Map<String, String> params = {'id': 'eq.$categoryId'};
+    final url = generateUrlFromParams(ApiRoutes.category, params);
     final jsonBody = body.toJsonWithId();
     final response = await request.put(url, jsonBody);
     if (response.statusCode == 204) {
@@ -82,7 +87,8 @@ class CategoryService {
 
   Future<dynamic> updateCategoryFavorite(
       String categoryId, CategoryFavoriteModel body) async {
-    final url = '/category?id=eq.$categoryId';
+    final Map<String, String> params = {'id': 'eq.$categoryId'};
+    final url = generateUrlFromParams(ApiRoutes.category, params);
     final jsonBody = body.toJsonWithId();
     final response = await request.put(url, jsonBody);
     if (response.statusCode == 204) {

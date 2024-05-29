@@ -32,6 +32,7 @@ class AccountProvider extends DisposableProvider {
     setLoading(true);
     final response = await _service.getAll(userId);
     loading = false;
+    notifyListeners();
     return response.length;
   }
 
