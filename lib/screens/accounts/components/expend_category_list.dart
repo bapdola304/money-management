@@ -3,9 +3,12 @@ import 'package:money_management/components/base64_image_widget.dart';
 import 'package:money_management/components/dialog_confirm.dart';
 import 'package:money_management/components/show_toastification.dart';
 import 'package:money_management/model/expend.dart';
+import 'package:money_management/model/home_date_category.dart';
 import 'package:money_management/provider/category_provider.dart';
 import 'package:money_management/provider/expend_provider.dart';
 import 'package:money_management/screens/create_expend/create_expend.dart';
+import 'package:money_management/storage/locator.dart';
+import 'package:money_management/storage/user_storage.dart';
 import 'package:money_management/utils/currence_format.dart';
 import 'package:money_management/utils/enum.dart';
 import 'package:provider/provider.dart';
@@ -28,10 +31,19 @@ class ExpendCategoryList extends StatelessWidget {
     context.read<ExpendProvider>().deleteExpend(expendId).then((response) {
       if (response.statusCode == 204) {
         showToastification('Xóa bản ghi thành công!', 'success', context);
+        getExpendListByDate(context);
         context.read<ExpendProvider>().getAllExpend(accountId);
         Navigator.pop(context);
       }
     });
+  }
+
+  void getExpendListByDate(BuildContext context) {
+    DateCategory categoryDateSelected =
+        context.read<ExpendProvider>().categoryDateSelected;
+    String userId = serviceLocator<UserStorage>().getUserId() ?? "";
+    Provider.of<ExpendProvider>(context, listen: false).getExpendsByDate(
+        categoryDateSelected.startDate, categoryDateSelected.endDate, userId);
   }
 
   void onItemClicked(BuildContext context, dynamic expendItem) {
