@@ -9,14 +9,9 @@ import 'package:money_management/skeletons/skeleton_expend_list_date.dart';
 import 'package:money_management/utils/data_utils.dart';
 import 'package:provider/provider.dart';
 
-class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
+class Home extends StatelessWidget {
+  const Home({super.key});
 
-  @override
-  _HomeState createState() => _HomeState();
-}
-
-class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,7 +29,7 @@ class _HomeState extends State<Home> {
                     isLoading: expendProviderData.loading,
                     expendList: expendProviderData.expendListByDate)),
             const SizedBox(height: 20),
-            CategoryList(),
+            const CategoryList(),
             const Text('Lịch sử thu chi',
                 style: TextStyle(color: Colors.black54)),
             const SizedBox(height: 10),

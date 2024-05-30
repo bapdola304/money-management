@@ -5,7 +5,7 @@ import 'package:money_management/screens/navigation/animated_bar.dart';
 import 'package:rive/rive.dart' hide LinearGradient;
 
 class CustomTabBar extends StatefulWidget {
-  const CustomTabBar({Key? key, required this.onTabChange}) : super(key: key);
+  const CustomTabBar({super.key, required this.onTabChange});
 
   final Function(int tabIndex) onTabChange;
 

@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 
 class InputCustom extends StatefulWidget {
   const InputCustom(
-      {Key? key,
+      {super.key,
       required this.label,
       required this.obscureText,
       this.validator,
-      this.controller})
-      : super(key: key);
+      this.controller});
   final String label;
   final bool obscureText;
   final String? Function(String?)? validator;
@@ -70,7 +69,7 @@ class _InputCustomState extends State<InputCustom> {
                     )
                   : null,
               enabledBorder: const OutlineInputBorder(
-                borderSide: const BorderSide(color: Colors.grey),
+                borderSide: BorderSide(color: Colors.grey),
               ),
               border: const OutlineInputBorder(
                   borderSide: BorderSide(color: Colors.grey))),

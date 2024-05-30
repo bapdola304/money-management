@@ -15,8 +15,8 @@ class SearchInput extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Icon(Icons.search),
-            SizedBox(width: 10),
+            const Icon(Icons.search),
+            const SizedBox(width: 10),
             Expanded(
               child: TextField(
                 onChanged: onChanged,

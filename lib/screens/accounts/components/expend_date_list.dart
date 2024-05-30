@@ -6,8 +6,9 @@ import 'package:money_management/utils/date_format.dart';
 
 class ExpendDateList extends StatefulWidget {
   const ExpendDateList(
-      {Key? key, required this.expendListGroupByDate, required this.accountId})
-      : super(key: key);
+      {super.key,
+      required this.expendListGroupByDate,
+      required this.accountId});
   final List<Map<String, dynamic>> expendListGroupByDate;
   final String accountId;
 
@@ -16,7 +17,7 @@ class ExpendDateList extends StatefulWidget {
 }
 
 class _ExpendDateListState extends State<ExpendDateList> {
-  ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
   int pageSize = 5;
   int pageNumber = 2;
 

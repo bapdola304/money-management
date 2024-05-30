@@ -5,12 +5,11 @@ import 'package:money_management/model/category.dart';
 
 class FavoriteList extends StatefulWidget {
   const FavoriteList(
-      {Key? key,
+      {super.key,
       this.onItemClicked,
       required this.categorySelected,
       this.transactionTypeSelect,
-      this.categoryList})
-      : super(key: key);
+      this.categoryList});
   final Function(CategoryModel category)? onItemClicked;
   final CategoryModel categorySelected;
   final TransactionTypeSelect? transactionTypeSelect;

@@ -2,7 +2,7 @@ import 'package:money_management/skeletons/skeleton_container.dart';
 import 'package:flutter/material.dart';
 
 class SkeletonCategoryList extends StatelessWidget {
-  const SkeletonCategoryList({Key? key}) : super(key: key);
+  const SkeletonCategoryList({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +41,7 @@ class SkeletonCategoryList extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             const Center(
-              child: const SkeletonContainer.rounded(
+              child: SkeletonContainer.rounded(
                 width: 90,
                 height: 15,
               ),

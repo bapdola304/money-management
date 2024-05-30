@@ -27,8 +27,7 @@ import 'package:money_management/components/show_toastification.dart';
 
 class CreateExpend extends StatefulWidget {
   const CreateExpend(
-      {Key? key, this.expendSelected, this.isCreateFromBottomMenu})
-      : super(key: key);
+      {super.key, this.expendSelected, this.isCreateFromBottomMenu});
   final ExpendModel? expendSelected;
   final bool? isCreateFromBottomMenu;
   @override
@@ -36,8 +35,9 @@ class CreateExpend extends StatefulWidget {
 }
 
 class _CreateExpendState extends State<CreateExpend> {
-  TextEditingController _amountController = TextEditingController(text: '0');
-  TextEditingController _desController = TextEditingController();
+  final TextEditingController _amountController =
+      TextEditingController(text: '0');
+  final TextEditingController _desController = TextEditingController();
   var focusNode = FocusNode();
   ValueNotifier<CategoryModel> categorySelected =
       ValueNotifier(CategoryModel(name: '', iconId: '', isFavorite: false));

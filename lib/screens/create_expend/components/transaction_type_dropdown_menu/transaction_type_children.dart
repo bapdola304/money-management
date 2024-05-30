@@ -7,7 +7,7 @@ class TransactionTypeChildren extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(5),
+      padding: const EdgeInsets.all(5),
       width: 160,
       decoration: BoxDecoration(
           color: Colors.white.withOpacity(0.2),
@@ -15,10 +15,10 @@ class TransactionTypeChildren extends StatelessWidget {
       child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
         Text(
           name,
-          style: TextStyle(
+          style: const TextStyle(
               fontSize: 18, fontWeight: FontWeight.w500, color: Colors.white),
         ),
-        Icon(Icons.arrow_drop_down, color: Colors.white)
+        const Icon(Icons.arrow_drop_down, color: Colors.white)
       ]),
     );
   }

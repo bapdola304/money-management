@@ -2,7 +2,7 @@ import 'package:money_management/skeletons/skeleton_container.dart';
 import 'package:flutter/material.dart';
 
 class SkeletonCategoryExpend extends StatelessWidget {
-  const SkeletonCategoryExpend({Key? key}) : super(key: key);
+  const SkeletonCategoryExpend({super.key});
 
   @override
   Widget build(BuildContext context) {

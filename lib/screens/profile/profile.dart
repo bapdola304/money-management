@@ -6,7 +6,7 @@ import 'package:money_management/storage/user_storage.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class Profile extends StatefulWidget {
-  const Profile({Key? key}) : super(key: key);
+  const Profile({super.key});
 
   @override
   _ProfileState createState() => _ProfileState();
@@ -53,7 +53,7 @@ class _ProfileState extends State<Profile> {
                   Row(
                     children: [
                       Container(
-                        padding: EdgeInsets.all(8),
+                        padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
                             color: Colors.blue[400],
                             borderRadius: BorderRadius.circular(8)),
@@ -84,7 +84,7 @@ class _ProfileState extends State<Profile> {
                   Row(
                     children: [
                       Container(
-                        padding: EdgeInsets.all(8),
+                        padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
                             color: Colors.green[400],
                             borderRadius: BorderRadius.circular(8)),
@@ -111,7 +111,8 @@ class _ProfileState extends State<Profile> {
                 sharedPrefService.clearUserData();
                 AppProviders.disposeAllDisposableProviders(context);
                 Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
-                    MaterialPageRoute(builder: (context) => LoginScreen()),
+                    MaterialPageRoute(
+                        builder: (context) => const LoginScreen()),
                     (route) => false);
               },
               child: Row(
@@ -120,7 +121,7 @@ class _ProfileState extends State<Profile> {
                   Row(
                     children: [
                       Container(
-                        padding: EdgeInsets.all(8),
+                        padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
                             color: Colors.red[400],
                             borderRadius: BorderRadius.circular(8)),

@@ -25,7 +25,7 @@ class HomeAppBar extends StatelessWidget {
           children: [
             Text(
               'Xin chào, $fullName',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
             ),
             Text('Hôm nay, $date',
                 style:

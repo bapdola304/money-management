@@ -17,7 +17,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await setupServiceLocator();
   await initializeDateFormatting('vi_VN', '');
-  runApp(MyApp());
+  runApp(const MyApp());
   configLoading();
 }
 
@@ -69,7 +69,7 @@ class _MyAppState extends State<MyApp> {
             useMaterial3: true,
           ),
           home: LoadingOverlay(
-              child: isLoggedIn() ? MainScreen() : LoginScreen()),
+              child: isLoggedIn() ? const MainScreen() : const LoginScreen()),
           builder: EasyLoading.init(),
         ),
       ),

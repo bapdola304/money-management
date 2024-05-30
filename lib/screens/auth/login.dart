@@ -12,6 +12,8 @@ import 'package:provider/provider.dart';
 import 'package:wc_form_validators/wc_form_validators.dart';
 
 class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
+
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 }
@@ -41,7 +43,7 @@ class _LoginScreenState extends State<LoginScreen> {
         sharedPrefService.saveUserData(
             user.id ?? "", user.username, user.fullName);
         Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => MainScreen()),
+            MaterialPageRoute(builder: (context) => const MainScreen()),
             (route) => false);
       } else {
         showToastification(
@@ -55,7 +57,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
-        child: Container(
+        child: SizedBox(
           height: MediaQuery.of(context).size.height,
           width: double.infinity,
           child: Column(

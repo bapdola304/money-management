@@ -22,7 +22,7 @@ class ExpendHistory extends StatefulWidget {
 }
 
 class _ExpendHistoryState extends State<ExpendHistory> {
-  ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
   int pageSize = 5;
   int pageNumber = 2;
 

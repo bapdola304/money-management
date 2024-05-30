@@ -9,6 +9,8 @@ import 'package:provider/provider.dart';
 import 'package:wc_form_validators/wc_form_validators.dart';
 
 class SignupPage extends StatefulWidget {
+  const SignupPage({super.key});
+
   @override
   State<SignupPage> createState() => _SignupPageState();
 }
@@ -58,7 +60,7 @@ class _SignupPageState extends State<SignupPage> {
         clearForm();
         showToastification('Đăng ký tài khoản thành công!', 'success', context);
         Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
-          builder: (context) => LoginScreen(),
+          builder: (context) => const LoginScreen(),
         ));
       }
     }
@@ -140,7 +142,7 @@ class _SignupPageState extends State<SignupPage> {
                     onTap: () =>
                         Navigator.of(context, rootNavigator: true).push(
                       MaterialPageRoute(
-                        builder: (context) => LoginScreen(),
+                        builder: (context) => const LoginScreen(),
                       ),
                     ),
                     child: const Text(

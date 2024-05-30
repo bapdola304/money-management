@@ -34,9 +34,9 @@ class TypeSelect extends StatelessWidget {
                 children: [
                   Text(
                     getText(),
-                    style: TextStyle(fontSize: 18),
+                    style: const TextStyle(fontSize: 18),
                   ),
-                  Icon(Icons.keyboard_arrow_right_rounded)
+                  const Icon(Icons.keyboard_arrow_right_rounded)
                 ],
               ),
               const SizedBox(height: 12),

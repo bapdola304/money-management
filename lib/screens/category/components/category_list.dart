@@ -4,11 +4,10 @@ import 'package:money_management/model/category.dart';
 
 class CategoryTabList extends StatelessWidget {
   const CategoryTabList(
-      {Key? key,
+      {super.key,
       this.onActionsPressed,
       this.onItemClicked,
-      required this.categoryList})
-      : super(key: key);
+      required this.categoryList});
   final Function(CategoryModel category)? onActionsPressed;
   final Function()? onItemClicked;
   final List<CategoryModel> categoryList;

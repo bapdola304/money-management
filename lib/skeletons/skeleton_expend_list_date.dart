@@ -2,7 +2,7 @@ import 'package:money_management/skeletons/skeleton_container.dart';
 import 'package:flutter/material.dart';
 
 class SkeletonExpendListDate extends StatelessWidget {
-  const SkeletonExpendListDate({Key? key}) : super(key: key);
+  const SkeletonExpendListDate({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -15,7 +15,7 @@ import 'package:money_management/utils/data_utils.dart';
 import 'package:provider/provider.dart';
 
 class Accounts extends StatefulWidget {
-  const Accounts({Key? key}) : super(key: key);
+  const Accounts({super.key});
 
   @override
   _AccountsState createState() => _AccountsState();

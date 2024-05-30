@@ -57,7 +57,7 @@ class ExpendBoard extends StatelessWidget {
                   ),
                   const SizedBox(width: 5),
                   isLoading
-                      ? SkeletonHomeBoard()
+                      ? const SkeletonHomeBoard()
                       : Text(formatCurrency(totalIncome, true),
                           style: const TextStyle(
                               color: Colors.green,
@@ -72,7 +72,7 @@ class ExpendBoard extends StatelessWidget {
                       color: Colors.red[400]),
                   const SizedBox(width: 5),
                   isLoading
-                      ? SkeletonHomeBoard()
+                      ? const SkeletonHomeBoard()
                       : Text(
                           formatCurrency(totalExpense, true),
                           style: TextStyle(

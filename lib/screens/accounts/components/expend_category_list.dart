@@ -12,10 +12,9 @@ import 'package:provider/provider.dart';
 
 class ExpendCategoryList extends StatelessWidget {
   const ExpendCategoryList(
-      {Key? key,
+      {super.key,
       required this.expendListGroupByCategory,
-      required this.accountId})
-      : super(key: key);
+      required this.accountId});
   final List<Map<String, dynamic>> expendListGroupByCategory;
   final String accountId;
 
@@ -50,7 +49,7 @@ class ExpendCategoryList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      physics: NeverScrollableScrollPhysics(),
+      physics: const NeverScrollableScrollPhysics(),
       itemCount: expendListGroupByCategory.length,
       shrinkWrap: true,
       itemBuilder: (context, index) {
@@ -89,7 +88,7 @@ class ExpendCategoryList extends StatelessWidget {
                     child: Text(expendItem['category']['name'],
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 16, fontWeight: FontWeight.w600)),
                   ),
                   const SizedBox(width: 8),

@@ -16,7 +16,7 @@ import 'package:provider/provider.dart';
 import 'package:wc_form_validators/wc_form_validators.dart';
 
 class Category extends StatefulWidget {
-  const Category({Key? key}) : super(key: key);
+  const Category({super.key});
 
   @override
   _CreateCategoryState createState() => _CreateCategoryState();
@@ -35,6 +35,7 @@ class _CreateCategoryState extends State<Category>
   late CategoryModel categorySelected =
       CategoryModel(name: '', iconId: '', isFavorite: false);
 
+  @override
   void initState() {
     super.initState();
     if (context.read<CategoryProvider>().categoryList.isNotEmpty) return;
